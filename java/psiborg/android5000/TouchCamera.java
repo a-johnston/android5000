@@ -12,7 +12,7 @@ public class TouchCamera extends GameObject {
                 new float[]{3.0f,  3.0f,  3.0f},
                 new float[]{0.0f,  0.0f,  0.0f},
                 new float[]{0.0f,  0.0f,  1.0f},
-                120f,1f,10f);
+                70f,1f,10f);
         cam.setMain();
     }
     @Override

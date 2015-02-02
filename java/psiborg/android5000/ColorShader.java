@@ -17,9 +17,9 @@ public class ColorShader extends Shader {
 	public static float[] ambientCol = new float[]{1f,1f,1f};
 	
 	private int sColor;
-	
-	private static String vertex = "color_vertex";	
-	private static String fragment = "color_fragment";
+
+    private static String vertex = "color_vertex";
+    private static String fragment = "color_fragment";
 
 	private FloatBuffer vertexBuffer;
 	private FloatBuffer normalBuffer;

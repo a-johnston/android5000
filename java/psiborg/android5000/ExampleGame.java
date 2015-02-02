@@ -3,6 +3,7 @@ package psiborg.android5000;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.view.MotionEvent;
+import android.view.SurfaceView;
 
 import psiborg.android5000.base.Scene;
 
