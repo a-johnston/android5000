@@ -1,0 +1,16 @@
+precision mediump float;
+
+uniform vec3 lightCol;
+uniform vec3 ambient;
+uniform float dirInt;
+uniform float dirRad;
+
+varying vec4 p_color;
+varying vec3 p_normal;
+varying vec3 p_dist;
+
+void main() {
+	float intensity = clamp(dot(normalize(p_normal),normalize(p_dist)),0.0,1.0)*dirInt*clamp((dirRad-length(p_dist))/dirRad,0.0,1.0);
+	vec4 light = vec4(lightCol*intensity + ambient,1.0);
+	gl_FragColor = p_color * light;
+}
