@@ -48,7 +48,7 @@ public class IO {
 		for (Integer f : point) mesh.order[i++] = (short)(int)f;
 		mesh.points  = Vector3.toFloatArray(verts.toArray(new Vector3[verts.size()]));
 		//mesh.color   = Vector3.toFloatArray(cols.toArray(new Vector3[verts.size()]));
-		mesh.normals = Vector3.toFloatArray(Vector3.getNormals(verts.toArray(new Vector3[verts.size()]), mesh.order));
+		mesh.normals = Vector3.toFloatArray(MeshData.getNormals(verts.toArray(new Vector3[verts.size()]), mesh.order));
 		
 		mesh.color = new float[mesh.points.length];
 		Random rand = new Random();

@@ -2,15 +2,34 @@ package psiborg.android5000.util;
 
 public class Vector3 {
 	public float x, y, z;
-	public Vector3(float xi, float yi, float zi) {
-		x = xi; y = yi; z = zi;
+    public Vector3(Vector3 v) { set(v); }
+	public Vector3(float x, float y, float z) {
+        set(x,y,z);
 	}
-	public Vector3(Vector2 v) {
-		x = v.x; y = v.y; z = 0f;
+    public Vector3(float[] x) {
+        set(x);
+    }
+	public Vector3(Vector2 v) { set(v); }
+	public Vector3(Vector2 v, float z) {
+		set(v);
+        this.z = z;
 	}
-	public Vector3(Vector2 v, float zi) {
-		x = v.x; y = v.y; z = zi;
-	}
+    public Vector3 set(float x, float y, float z) {
+        this.x = x; this.y = y; this.z = z;
+        return this;
+    }
+    public Vector3 set(float[] x) {
+        this.x = x[0]; this.y = x[1]; this.z = x[2];
+        return this;
+    }
+    public Vector3 set(Vector3 v) {
+        this.x = v.x; this.y = v.y; this.z = v.z;
+        return this;
+    }
+    public Vector3 set(Vector2 v) {
+        this.x = v.x; this.y = v.y; this.z = 0;
+        return this;
+    }
 	public static Vector3 cross(Vector3 v1, Vector3 v2) {
 		Vector3 result = new Vector3(0, 0, 0);
 		result.x = (v1.y * v2.z) - (v1.z * v2.y);
@@ -51,24 +70,6 @@ public class Vector3 {
 	}
 	public float[] toFloatArray() {
 		return new float[]{x,y,z};
-	}
-	public static Vector3 getNormal(Vector3 p1, Vector3 p2, Vector3 p3) {
-		
-		return norm(cross(sub(p2,p1),sub(p3,p1)));
-	}
-	public static Vector3[] getNormals(Vector3[] points, int[] order) {
-		Vector3[] norms = new Vector3[points.length];
-		for (int i=0; i<norms.length; i++) {
-			norms[i] = new Vector3(0,0,0);
-		}
-		for (int i=0; i<order.length; i+=3) {
-			Vector3 n = getNormal(points[order[i]],points[order[i+1]],points[order[i+2]]);
-			norms[order[i]]   = add(norms[order[i]],n);
-			norms[order[i+1]] = add(norms[order[i+1]],n);
-			norms[order[i+2]] = add(norms[order[i+2]],n);
-		}
-		for (int i=0; i<norms.length; i++) norms[i] = norm(norms[i]);
-		return norms;
 	}
 	public String toString() {
 		return "["+x+" "+y+" "+z+"]";
