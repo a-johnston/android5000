@@ -65,9 +65,9 @@ public class Camera {
 	}
     private void updateLook() {
         Matrix.setLookAtM(look,0,
-                from.x, from.y, from.z,
-                to.x,   to.y,   to.z,
-                up.x,   up.y,   up.z);
+                (float)from.x, (float)from.y, (float)from.z,
+                (float)to.x,   (float)to.y,   (float)to.z,
+                (float)up.x,   (float)up.y,   (float)up.z);
     }
     private void updatePer() {
         Matrix.perspectiveM(per,0,fov,aspect,near,far);

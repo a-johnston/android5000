@@ -1,11 +1,14 @@
 package psiborg.android5000.util;
 
 public class Vector3 {
-	public float x, y, z;
+	public double x, y, z;
     public Vector3(Vector3 v) { set(v); }
-	public Vector3(float x, float y, float z) {
+    public Vector3(float x, float y, float z) {
         set(x,y,z);
-	}
+    }
+    public Vector3(double x, double y, double z) {
+        set(x,y,z);
+    }
     public Vector3(Quaternion q) { set(q.x, q.y, q.z); }
     public Vector3(float[] x) {
         set(x);
@@ -15,11 +18,15 @@ public class Vector3 {
 		set(v);
         this.z = z;
 	}
-    public Vector3 set(float x, float y, float z) {
+    public Vector3 set(double x, double y, double z) {
         this.x = x; this.y = y; this.z = z;
         return this;
     }
     public Vector3 set(float[] x) {
+        this.x = x[0]; this.y = x[1]; this.z = x[2];
+        return this;
+    }
+    public Vector3 set(double[] x) {
         this.x = x[0]; this.y = x[1]; this.z = x[2];
         return this;
     }
@@ -38,10 +45,10 @@ public class Vector3 {
 		result.z = (v1.x * v2.y) - (v1.y * v2.x);
 		return result;
 	}
-	public static float dot(Vector3 v1, Vector3 v2) {
+	public static double dot(Vector3 v1, Vector3 v2) {
 		return v1.x*v2.x + v1.y*v2.y + v1.z*v2.z;
 	}
-	public static Vector3 mult(Vector3 v, float s) {
+	public static Vector3 mult(Vector3 v, double s) {
 		return new Vector3(v.x*s, v.y*s, v.z*s);
 	}
 	public static Vector3 mult(Vector3 v1, Vector3 v2) {
@@ -58,19 +65,19 @@ public class Vector3 {
 		return new Vector3(v1.x+v2.x , v1.y+v2.y , v1.z+v2.z);
 	}
 	public static float[] toFloatArray(Vector3 v) {
-		return new float[]{v.x,v.y,v.z};
+		return v.toFloatArray();
 	}
 	public static float[] toFloatArray(Vector3[] a) {
 		float[] r = new float[a.length*3];
 		for (int i=0; i<a.length; i++) {
-			r[i*3]   = a[i].x;
-			r[i*3+1] = a[i].y;
-			r[i*3+2] = a[i].z;
+			r[i*3]   = (float)a[i].x;
+			r[i*3+1] = (float)a[i].y;
+			r[i*3+2] = (float)a[i].z;
 		}
 		return r;
 	}
 	public float[] toFloatArray() {
-		return new float[]{x,y,z};
+		return new float[]{(float)x,(float)y,(float)z};
 	}
 	public String toString() {
 		return "vector3["+x+" , "+y+" , "+z+"]";
