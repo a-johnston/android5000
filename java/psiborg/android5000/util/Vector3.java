@@ -6,6 +6,7 @@ public class Vector3 {
 	public Vector3(float x, float y, float z) {
         set(x,y,z);
 	}
+    public Vector3(Quaternion q) { set(q.x, q.y, q.z); }
     public Vector3(float[] x) {
         set(x);
     }
@@ -72,6 +73,6 @@ public class Vector3 {
 		return new float[]{x,y,z};
 	}
 	public String toString() {
-		return "["+x+" "+y+" "+z+"]";
+		return "vector3["+x+" , "+y+" , "+z+"]";
 	}
 }

@@ -42,4 +42,7 @@ public class Vector2 {
 	public float[] toFloatArray() {
 		return new float[]{x,y};
 	}
+    public String toString() {
+        return "vector2["+x+" , "+y+"]";
+    }
 }
