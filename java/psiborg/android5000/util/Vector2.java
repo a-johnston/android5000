@@ -3,21 +3,49 @@ package psiborg.android5000.util;
 
 public class Vector2 {
 	public double x, y;
-	public Vector2(double x, double y) {
+	public Vector2(final double x, final double y) {
 		this.x = x;
         this.y = y;
 	}
-	public Vector2(Vector3 v) {
-		x = v.x; y = v.y;
+    public Vector2(final Vector2 v) {
+        x = v.x;
+        y = v.y;
+    }
+	public Vector2(final Vector3 v) {
+		x = v.x;
+        y = v.y;
 	}
+    public double dot(final Vector2 v) {
+        return this.x*v.x + this.y*v.y;
+    }
+    public Vector2 mult(final double n) {
+        this.x *= n;
+        this.y *= n;
+        return this;
+    }
+    public Vector2 mult(final Vector2 v) {
+        this.x *= v.x;
+        this.y *= v.y;
+        return this;
+    }
+    public Vector2 add(final Vector2 v) {
+        this.x += v.x;
+        this.y += v.y;
+        return this;
+    }
+    public Vector2 sub(final Vector2 v) {
+        this.x -= v.x;
+        this.y -= v.y;
+        return this;
+    }
 	public static double dot(Vector2 v1, Vector2 v2) {
-		return v1.x*v2.x + v1.y*v2.y;
+		return v1.dot(v2);
 	}
-	public static Vector2 mult(Vector2 v, float s) {
-		return new Vector2(v.x*s, v.y*s);
+	public static Vector2 mult(final Vector2 v, final float s) {
+		return (new Vector2(v)).mult(s);
 	}
-	public static Vector2 mult(Vector2 v1, Vector2 v2) {
-		return new Vector2(v1.x*v2.x, v1.y*v2.y);
+	public static Vector2 mult(final Vector2 v1, final Vector2 v2) {
+		return (new Vector2(v1)).mult(v2);
 	}
 	public static Vector2 sub(Vector2 v1, Vector2 v2) {
 		return new Vector2(v1.x-v2.x , v1.y-v2.y);

@@ -8,7 +8,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Random;
 
-import psiborg.android5000.Android5000;
+import psiborg.android5000.GameEngine;
 
 public class IO {
 	public static MeshData loadObj(String filename) {
@@ -18,7 +18,7 @@ public class IO {
 		ArrayList<Integer> point = new ArrayList<Integer>();
 		
 		try {
-			BufferedReader in = new BufferedReader(new InputStreamReader(Android5000.assetman.open(filename)));
+			BufferedReader in = new BufferedReader(new InputStreamReader(GameEngine.assetman.open(filename)));
 			String s = in.readLine();
 			while (s != null) {
 				String[] data = s.split(" ");
@@ -63,7 +63,7 @@ public class IO {
 	public static String readFile(String filename) {
 		String r = "";
 		try {
-			BufferedReader in = new BufferedReader(new InputStreamReader(Android5000.assetman.open(filename)));
+			BufferedReader in = new BufferedReader(new InputStreamReader(GameEngine.assetman.open(filename)));
 			String s = in.readLine();
 			while (s != null) {
 				r += s + "\n";

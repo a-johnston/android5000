@@ -2,6 +2,9 @@ package psiborg.android5000.util;
 
 public class Vector3 {
 	public double x, y, z;
+    public static final Vector3 zero = new Vector3(0,0,0);
+    public static final Vector3 one  = new Vector3(1,1,1);
+    public Vector3() { set(0,0,0); }
     public Vector3(Vector3 v) { set(v); }
     public Vector3(float x, float y, float z) {
         set(x,y,z);
@@ -22,11 +25,15 @@ public class Vector3 {
         this.x = x; this.y = y; this.z = z;
         return this;
     }
+    public Vector3 set(double[] x) {
+        this.x = x[0]; this.y = x[1]; this.z = x[2];
+        return this;
+    }
     public Vector3 set(float[] x) {
         this.x = x[0]; this.y = x[1]; this.z = x[2];
         return this;
     }
-    public Vector3 set(double[] x) {
+    public Vector3 set(int[] x) {
         this.x = x[0]; this.y = x[1]; this.z = x[2];
         return this;
     }

@@ -13,6 +13,6 @@ public class Suzanne extends GameObject {
     }
     @Override
     public void step() {
-        ColorShader.lightDir = new float[]{ (float)(Math.cos(Android5000.time)*3), 0, (float)(Math.sin(Android5000.time)*3) };
+        ColorShader.lightDir = new float[]{ (float)(Math.cos(GameEngine.time)*3), 0, (float)(Math.sin(GameEngine.time)*3) };
     }
 }

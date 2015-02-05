@@ -2,7 +2,7 @@ package psiborg.android5000.base;
 
 import android.opengl.Matrix;
 
-import psiborg.android5000.Android5000;
+import psiborg.android5000.GameEngine;
 import psiborg.android5000.util.Vector3;
 
 public class Camera {
@@ -18,7 +18,7 @@ public class Camera {
         this.to   = new Vector3(to);
         this.up   = new Vector3(up);
         this.fov    = fov;
-        this.aspect = Android5000.aspect;
+        this.aspect = GameEngine.aspect;
         this.near   = near;
         this.far    = far;
         updateLook();
@@ -30,7 +30,7 @@ public class Camera {
         this.to   = new Vector3(to);
         this.up   = new Vector3(up);
         this.fov    = fov;
-        this.aspect = Android5000.aspect;
+        this.aspect = GameEngine.aspect;
         this.near   = near;
         this.far    = far;
         updateLook();
@@ -49,14 +49,14 @@ public class Camera {
 	}
 	public void updatePerspective(float fov, float near, float far) {
         this.fov    = fov;
-        this.aspect = Android5000.aspect;
+        this.aspect = GameEngine.aspect;
         this.near   = near;
         this.far    = far;
         updatePer();
         updateMVP();
 	}
     public void updateAspectRatio() {
-        this.aspect = Android5000.aspect;
+        this.aspect = GameEngine.aspect;
         updatePer();
         updateMVP();
     }

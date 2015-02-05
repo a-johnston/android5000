@@ -132,11 +132,10 @@ public class Quaternion {
         m[15] = 1;
     }
     public Vector3 transform(Vector3 v) {
-        Quaternion q1 = new Quaternion(this);
+        Quaternion q1 = (new Quaternion(this)).conjugate();
         Quaternion q2 = new Quaternion(v);
-        q1.conjugate();
         q1.multLeft(q2.multLeft(this));
-        Vector3 r = new Vector3(q2.x, q2.y, q2.z);
+        Vector3 r = new Vector3(q1.x, q1.y, q1.z);
         return r;
     }
     public boolean equals(Quaternion q) {
