@@ -19,8 +19,8 @@ public class MotionTracker {
         }
     }
     private static int match(Vector2 t) {
-        for (Vector2 t : points) {
-            if ()
+        for (Vector2 p : points) {
+            //if ()
         }
     }
 }

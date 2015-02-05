@@ -45,31 +45,73 @@ public class Vector3 {
         this.x = v.x; this.y = v.y; this.z = 0;
         return this;
     }
+    public Vector3 mult(final double n) {
+        this.x *= n;
+        this.y *= n;
+        this.z *= n;
+        return this;
+    }
+    public Vector3 mult(final Vector3 v) {
+        this.x *= v.x;
+        this.y *= v.y;
+        this.z *= v.z;
+        return this;
+    }
+    public Vector3 add(final Vector3 v) {
+        this.x += v.x;
+        this.y += v.y;
+        this.z += v.z;
+        return this;
+    }
+    public Vector3 sub(final Vector3 v) {
+        this.x -= v.x;
+        this.y -= v.y;
+        this.z -= v.z;
+        return this;
+    }
+    public double len() {
+        return Math.sqrt(this.len2());
+    }
+    public double len2() {
+        return x*x+y*y+z*z;
+    }
+    public Vector3 normalized() {
+        double l = len();
+        if (l != 0) {
+            this.mult(1/l);
+        }
+        return this;
+    }
+    public double dot(final Vector3 v) {
+        return this.x*v.x+this.y*v.y+this.z*v.z;
+    }
+    public Vector3 cross(final Vector3 v) {
+        Vector3 result = new Vector3(0, 0, 0);
+        result.x = (this.y * v.z) - (this.z * v.y);
+        result.y = (this.z * v.x) - (this.x * v.z);
+        result.z = (this.x * v.y) - (this.y * v.x);
+        return result;
+    }
 	public static Vector3 cross(Vector3 v1, Vector3 v2) {
-		Vector3 result = new Vector3(0, 0, 0);
-		result.x = (v1.y * v2.z) - (v1.z * v2.y);
-		result.y = (v1.z * v2.x) - (v1.x * v2.z);
-		result.z = (v1.x * v2.y) - (v1.y * v2.x);
-		return result;
+		return v1.cross(v2);
 	}
 	public static double dot(Vector3 v1, Vector3 v2) {
-		return v1.x*v2.x + v1.y*v2.y + v1.z*v2.z;
+		return v1.dot(v2);
 	}
 	public static Vector3 mult(Vector3 v, double s) {
-		return new Vector3(v.x*s, v.y*s, v.z*s);
+		return new Vector3(v).mult(s);
 	}
 	public static Vector3 mult(Vector3 v1, Vector3 v2) {
-		return new Vector3(v1.x*v2.x, v1.y*v2.y, v1.z*v2.z);
+		return new Vector3(v1).mult(v2);
 	}
+    public static Vector3 add(Vector3 v1, Vector3 v2) {
+        return new Vector3(v1).add(v2);
+    }
 	public static Vector3 sub(Vector3 v1, Vector3 v2) {
-		return new Vector3(v1.x-v2.x , v1.y-v2.y , v1.z-v2.z);
+		return new Vector3(v1).sub(v2);
 	}
-	public static Vector3 norm(Vector3 v) {
-		float m = (float)Math.sqrt(v.x*v.x + v.y*v.y + v.z*v.z);
-		return mult(v,1/m);
-	}
-	public static Vector3 add(Vector3 v1, Vector3 v2) {
-		return new Vector3(v1.x+v2.x , v1.y+v2.y , v1.z+v2.z);
+	public static Vector3 normalized(Vector3 v) {
+		return new Vector3(v).normalized();
 	}
 	public static float[] toFloatArray(Vector3 v) {
 		return v.toFloatArray();

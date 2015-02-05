@@ -38,25 +38,40 @@ public class Vector2 {
         this.y -= v.y;
         return this;
     }
-	public static double dot(Vector2 v1, Vector2 v2) {
+    public double len() {
+        return Math.sqrt(this.len2());
+    }
+    public double len2() {
+        return x*x + y*y;
+    }
+    public Vector2 normalize() {
+        double v = this.len();
+        if (v != 0) {
+            this.mult(1/v);
+        }
+        return this;
+    }
+	public static double dot(final Vector2 v1, final Vector2 v2) {
 		return v1.dot(v2);
 	}
 	public static Vector2 mult(final Vector2 v, final float s) {
-		return (new Vector2(v)).mult(s);
+		return new Vector2(v).mult(s);
 	}
 	public static Vector2 mult(final Vector2 v1, final Vector2 v2) {
-		return (new Vector2(v1)).mult(v2);
+		return new Vector2(v1).mult(v2);
 	}
-	public static Vector2 sub(Vector2 v1, Vector2 v2) {
-		return new Vector2(v1.x-v2.x , v1.y-v2.y);
+    public static Vector2 add(final Vector2 v1, final Vector2 v2) {
+        return new Vector2(v1).add(v2);
+    }
+	public static Vector2 sub(final Vector2 v1, final Vector2 v2) {
+        return new Vector2(v1).sub(v2);
 	}
-	public static Vector2 norm(Vector2 v) {
-		float m = (float)Math.sqrt(v.x*v.x + v.y*v.y);
-		return mult(v,1/m);
+	public static Vector2 normalize(final Vector2 v) {
+		return new Vector2(v).normalize();
 	}
-	public static Vector2 add(Vector2 v1, Vector2 v2) {
-		return new Vector2(v1.x+v2.x , v1.y+v2.y);
-	}
+    public static double distance(final Vector2 v1, final Vector2 v2) {
+        return Vector2.sub(v1,v2).len();
+    }
 	public static float[] toFloatArray(Vector2 v) {
 		return v.toFloatArray();
 	}
