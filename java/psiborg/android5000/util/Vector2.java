@@ -72,21 +72,18 @@ public class Vector2 {
     public static double distance(final Vector2 v1, final Vector2 v2) {
         return Vector2.sub(v1,v2).len();
     }
-	public static float[] toFloatArray(Vector2 v) {
-		return v.toFloatArray();
-	}
-	public static float[] toFloatArray(Vector2[] a) {
-		float[] r = new float[a.length*2];
-		for (int i=0; i<a.length; i++) {
-			r[i*2]   = (float)a[i].x;
-			r[i*2+1] = (float)a[i].y;
-		}
-		return r;
-	}
 	public float[] toFloatArray() {
 		return new float[]{(float)x, (float)y};
 	}
     public String toString() {
         return "vector2["+x+" , "+y+"]";
+    }
+    public static float[] toFloatArray(Vector2[] a) {
+        float[] r = new float[a.length*2];
+        for (int i=0; i<a.length; i++) {
+            r[i*2]   = (float)a[i].x;
+            r[i*2+1] = (float)a[i].y;
+        }
+        return r;
     }
 }

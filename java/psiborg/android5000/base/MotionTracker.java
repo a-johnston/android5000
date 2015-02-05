@@ -22,5 +22,6 @@ public class MotionTracker {
         for (Vector2 p : points) {
             //if ()
         }
+        return 0;
     }
 }

@@ -113,22 +113,19 @@ public class Vector3 {
 	public static Vector3 normalized(Vector3 v) {
 		return new Vector3(v).normalized();
 	}
-	public static float[] toFloatArray(Vector3 v) {
-		return v.toFloatArray();
-	}
-	public static float[] toFloatArray(Vector3[] a) {
-		float[] r = new float[a.length*3];
-		for (int i=0; i<a.length; i++) {
-			r[i*3]   = (float)a[i].x;
-			r[i*3+1] = (float)a[i].y;
-			r[i*3+2] = (float)a[i].z;
-		}
-		return r;
-	}
 	public float[] toFloatArray() {
 		return new float[]{(float)x,(float)y,(float)z};
 	}
 	public String toString() {
 		return "vector3["+x+" , "+y+" , "+z+"]";
 	}
+    public static float[] toFloatArray(Vector3[] a) {
+        float[] r = new float[a.length*3];
+        for (int i=0; i<a.length; i++) {
+            r[i*3]   = (float)a[i].x;
+            r[i*3+1] = (float)a[i].y;
+            r[i*3+2] = (float)a[i].z;
+        }
+        return r;
+    }
 }
