@@ -16,8 +16,8 @@ public class Android5000 extends GLSurfaceView {
         setRenderer(renderer);
     }
     public void setScene(Scene scene) {
-        if (!renderer.setScene(scene)) {
-            Log.w("scene","scene failed to change, scene was locked by gameloop");
+        while (!renderer.setScene(scene)) {
+            Log.w("scene", "failed to change scenes. reattempting scene change...");
         }
     }
     @Override

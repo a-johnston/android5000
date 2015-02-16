@@ -33,9 +33,7 @@ public class Scene {
     }
     public void draw(float[] mvp) {
         for (GameObject o : list) {
-            if (o.shader != null) {
-                o.shader.draw(mvp);
-            }
+            o.draw(mvp);
         }
     }
 }

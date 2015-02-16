@@ -6,6 +6,7 @@ import psiborg.android5000.util.MeshData;
 
 public class Suzanne extends GameObject {
     public static float yaw, pitch, radius = 2.5f;
+    private ColorShader shader;
     @Override
     public void load() {
         MeshData obj = IO.loadObj("suzanne.obj");
@@ -14,5 +15,9 @@ public class Suzanne extends GameObject {
     @Override
     public void step() {
         ColorShader.lightDir = new float[]{ (float)(Math.cos(GameEngine.time)*3), 0, (float)(Math.sin(GameEngine.time)*3) };
+    }
+    @Override
+    public void draw(float[] mvp) {
+        shader.draw(mvp);
     }
 }
