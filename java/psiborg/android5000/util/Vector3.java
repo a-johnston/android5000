@@ -75,7 +75,7 @@ public class Vector3 {
     public double len2() {
         return x*x+y*y+z*z;
     }
-    public Vector3 normalized() {
+    public Vector3 normalize() {
         double l = len();
         if (l != 0) {
             this.mult(1/l);
@@ -110,9 +110,27 @@ public class Vector3 {
 	public static Vector3 sub(Vector3 v1, Vector3 v2) {
 		return new Vector3(v1).sub(v2);
 	}
-	public static Vector3 normalized(Vector3 v) {
-		return new Vector3(v).normalized();
+	public static Vector3 normalize(Vector3 v) {
+		return new Vector3(v).normalize();
 	}
+    public static Vector3 lerp(final Vector3 a, final Vector3 b, final double i) {
+        final double j = 1-i;
+        return lincomb(a,b,i,j);
+    }
+    public static Vector3 nlerp(final Vector3 a, final Vector3 b, final double i) {
+        return Vector3.lerp(a,b,i).normalize();
+    }
+    public static Vector3 slerp(final Vector3 a, final Vector3 b, final double i) {
+        final double d = a.dot(b);
+        final double angle = Math.acos(d);
+        final double is = 1.0/Math.sin(angle);
+        return lincomb(a,b,Math.sin((1-i) * angle)*is,Math.sin((i*angle))*is);
+    }
+    public static Vector3 lincomb(final Vector3 a, final Vector3 b, final double i, final double j) {
+        return new Vector3(a.x*j + b.x*i,
+                           a.y*j + b.y*i,
+                           a.z*j + b.z*i);
+    }
 	public float[] toFloatArray() {
 		return new float[]{(float)x,(float)y,(float)z};
 	}

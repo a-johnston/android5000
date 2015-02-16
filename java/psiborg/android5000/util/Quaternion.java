@@ -78,12 +78,18 @@ public class Quaternion {
         final double nw = this.w * q.w - this.x * q.x - this.y * q.y - this.z * q.z;
         return set(nx, ny, nz, nw);
     }
-    public Quaternion multLeft (Quaternion q) {
+    public Quaternion multLeft(final Quaternion q) {
         final double nx = q.w * this.x + q.x * this.w + q.y * this.z - q.z * y;
         final double ny = q.w * this.y + q.y * this.w + q.z * this.x - q.x * z;
         final double nz = q.w * this.z + q.z * this.w + q.x * this.y - q.y * x;
         final double nw = q.w * this.w - q.x * this.x - q.y * this.y - q.z * z;
         return set(nx, ny, nz, nw);
+    }
+    public double dot(final Quaternion q) {
+        return this.x*q.x + this.y*q.y + this.z*q.z + this.w*q.w;
+    }
+    public static double dot(final Quaternion a, final Quaternion b) {
+        return a.dot(b);
     }
     public static Quaternion mult(final Quaternion a, final Quaternion b) {
         Quaternion t = new Quaternion(a);
@@ -95,7 +101,6 @@ public class Quaternion {
     public double len2() {
         return x*x+y*y+z*z+w*w;
     }
-    //TODO: ensure the matrix is in correct order
     public void toMatrix (final float[] m) {
         if (m.length != 16) {
             return;
@@ -131,14 +136,33 @@ public class Quaternion {
         m[14] = 0;
         m[15] = 1;
     }
-    public Vector3 transform(Vector3 v) {
+    public Vector3 transform(final Vector3 v) {
         Quaternion q1 = (new Quaternion(this)).conjugate();
         Quaternion q2 = new Quaternion(v);
         q1.multLeft(q2.multLeft(this));
         Vector3 r = new Vector3(q1.x, q1.y, q1.z);
         return r;
     }
-    public boolean equals(Quaternion q) {
+    public static Quaternion lerp(final Quaternion a, final Quaternion b, final double i) {
+        final double j = 1-i;
+        return lincomb(a, b, i, j);
+    }
+    public static Quaternion nlerp(final Quaternion a, final Quaternion b, final double i) {
+        return Quaternion.lerp(a,b,i).normalize();
+    }
+    public static Quaternion slerp(final Quaternion a, final Quaternion b, final double i) {
+        final double d = a.dot(b);
+        final double angle = Math.acos(d);
+        final double is = 1.0/Math.sin(angle);
+        return lincomb(a,b,Math.sin((1-i) * angle)*is,Math.sin((i*angle))*is);
+    }
+    private static Quaternion lincomb(final Quaternion a, final Quaternion b, final double i, final double j) {
+        return new Quaternion(a.x*j + b.x*i,
+                              a.y*j + b.y*i,
+                              a.z*j + b.z*i,
+                              a.w*j + b.w*i);
+    }
+    public boolean equals(final Quaternion q) {
         return ((this.x == q.x) && (this.y == q.y) && (this.z == q.z) && (this.w == q.w));
     }
     public String toString() {

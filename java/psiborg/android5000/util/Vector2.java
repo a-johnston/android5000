@@ -72,6 +72,11 @@ public class Vector2 {
     public static double distance(final Vector2 v1, final Vector2 v2) {
         return Vector2.sub(v1,v2).len();
     }
+    public static Vector2 lerp(final Vector2 a, final Vector2 b, final double i) {
+        final double j = 1-i;
+        return new Vector2(a.x*j + b.x*i,
+                           a.y*j + b.y*i);
+    }
 	public float[] toFloatArray() {
 		return new float[]{(float)x, (float)y};
 	}

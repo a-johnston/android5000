@@ -19,10 +19,10 @@ public class MeshData {
             norms[order[i+1]] = Vector3.add(norms[order[i+1]],n);
             norms[order[i+2]] = Vector3.add(norms[order[i+2]],n);
         }
-        for (int i=0; i<norms.length; i++) norms[i] = Vector3.normalized(norms[i]);
+        for (int i=0; i<norms.length; i++) norms[i] = Vector3.normalize(norms[i]);
         return norms;
     }
     public static Vector3 getNormal(Vector3 p1, Vector3 p2, Vector3 p3) {
-        return Vector3.normalized(Vector3.cross(Vector3.sub(p2,p1),Vector3.sub(p3,p1)));
+        return Vector3.normalize(Vector3.cross(Vector3.sub(p2, p1), Vector3.sub(p3, p1)));
     }
 }
