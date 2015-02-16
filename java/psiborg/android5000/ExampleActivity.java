@@ -17,6 +17,8 @@ public class ExampleActivity extends Activity {
         scene.add(new TouchCamera());
         scene.add(new Suzanne());
         gameView.setScene(scene);
+
+        setContentView(gameView);
     }
     
     @Override

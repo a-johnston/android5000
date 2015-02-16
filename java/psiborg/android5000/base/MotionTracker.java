@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import psiborg.android5000.util.Vector2;
 
 public class MotionTracker {
-    private static ArrayList<Vector2> points = new ArrayList<Vector2>();
-    private double threshold = 5;
+    private static int maxPoints = 10;
+    private static Vector2[] posCurrent = new Vector2[maxPoints], posPast = new Vector2[maxPoints];
     public static void motion(MotionEvent e) {
         switch (e.getAction()) {
             case (MotionEvent.ACTION_DOWN):
@@ -18,10 +18,13 @@ public class MotionTracker {
                 break;
         }
     }
-    private static int match(Vector2 t) {
-        for (Vector2 p : points) {
-            //if ()
+    private static Vector2 match(Vector2 t, double dist) {
+        for (Vector2 p : posCurrent) {
+            if (Vector2.distance(t,p) < dist) {
+                return p;
+            }
         }
-        return 0;
+        return null;
     }
+
 }

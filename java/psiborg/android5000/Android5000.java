@@ -14,7 +14,6 @@ public class Android5000 extends GLSurfaceView {
         setEGLContextClientVersion(2);
         renderer = new GameEngine(activity);
         setRenderer(renderer);
-        activity.setContentView(this);
     }
     public void setScene(Scene scene) {
         if (!renderer.setScene(scene)) {
