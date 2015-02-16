@@ -31,9 +31,9 @@ public class Scene {
             o.step();
         }
     }
-    public void draw(float[] mvp) {
+    public void draw() {
         for (GameObject o : list) {
-            o.draw(mvp);
+            o.draw();
         }
     }
 }

@@ -17,7 +17,7 @@ public class Suzanne extends GameObject {
         ColorShader.lightDir = new float[]{ (float)(Math.cos(GameEngine.time)*3), 0, (float)(Math.sin(GameEngine.time)*3) };
     }
     @Override
-    public void draw(float[] mvp) {
-        shader.draw(mvp);
+    public void draw() {
+        shader.draw();
     }
 }

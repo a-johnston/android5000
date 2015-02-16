@@ -6,5 +6,5 @@ public abstract class GameObject {
     public void load()   {}
     public void unload() {}
     public void step()   {}
-    public void draw(float[] mvp) {}
+    public void draw() {}
 }

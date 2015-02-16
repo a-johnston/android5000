@@ -5,6 +5,7 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
+import psiborg.android5000.base.Camera;
 import psiborg.android5000.base.Shader;
 import psiborg.android5000.util.IO;
 import psiborg.android5000.util.MeshData;
@@ -94,7 +95,7 @@ public class ColorShader extends Shader {
 		GLES20.glDisableVertexAttribArray(mColorHandle);
 	}
 	@Override
-	public void draw(float[] mvpMatrix) {
+	public void draw() {
 		GLES20.glUseProgram(sColor);
 		
 		GLES20.glEnableVertexAttribArray(mPositionHandle);
@@ -111,7 +112,7 @@ public class ColorShader extends Shader {
 
 		//transform matrix
 		GLES20.glUniformMatrix4fv(GLES20.glGetUniformLocation(sColor, "uMVPMatrix"),
-				1, false, mvpMatrix, 0);
+				1, false, Camera.active.getMVP(), 0);
 
 		//draw command
 		GLES20.glDrawElements(

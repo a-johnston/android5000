@@ -10,11 +10,15 @@ public class MotionTracker {
     public static void motion(MotionEvent e) {
         switch (e.getAction()) {
             case (MotionEvent.ACTION_DOWN):
+            case (MotionEvent.ACTION_POINTER_DOWN):
+                //e.
                 Vector2 temp = new Vector2(e.getX(), e.getY());
+
                 break;
             case (MotionEvent.ACTION_MOVE):
                 break;
             case (MotionEvent.ACTION_UP):
+            case (MotionEvent.ACTION_POINTER_UP):
                 break;
         }
     }
