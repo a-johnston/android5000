@@ -1,5 +1,7 @@
 package psiborg.android5000.util;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 
 public class MeshData {
@@ -50,7 +52,7 @@ public class MeshData {
     public void stupidColors() {
         color.clear();
         for (Vector3 v : points) {
-            color.add(new Color((float)((v.x+1.0)/2.0), (float)((v.y+1.0)/2.0), (float)((v.z+1.0)/2.0)));
+            color.add(new Color(((float)v.x + 1f)/2f, ((float)v.y + 1f)/2f, ((float)v.z + 1f)/2f, .5f));
         }
     }
     public static Vector3[] getNormals(Vector3[] points, int[] order) {

@@ -1,5 +1,7 @@
 package psiborg.android5000.util;
 
+import android.util.Log;
+
 public class Color {
     public static final Color black = new Color(0f,0f,0f,1f),
                               white = new Color(1f,1f,1f,1f),

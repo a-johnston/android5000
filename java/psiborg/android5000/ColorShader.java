@@ -85,9 +85,9 @@ public class ColorShader extends Shader {
 		
 		//color data
 		GLES20.glVertexAttribPointer(
-				mColorHandle, DIM,
+				mColorHandle, DIM+1,
 				GLES20.GL_FLOAT, false,
-				stride, colorBuffer);
+				stride+4, colorBuffer);
 
 		GLES20.glDisableVertexAttribArray(mPositionHandle);
 		GLES20.glDisableVertexAttribArray(mNormalHandle);
