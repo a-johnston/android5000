@@ -4,10 +4,55 @@ import java.util.ArrayList;
 
 public class MeshData {
     public ArrayList<Vector3> points, normals;
-
-	public float[] color;
-	public float[] uv;
-	public int[]   order;
+    public ArrayList<Color> color;
+    public ArrayList<Vector2> uv;
+    public ArrayList<IVector3> order;
+    public MeshData() {
+        points  = new ArrayList<Vector3>();
+        normals = new ArrayList<Vector3>();
+        color   = new ArrayList<Color>();
+        uv      = new ArrayList<Vector2>();
+        order   = new ArrayList<IVector3>();
+    }
+    public float[] getPoints() {
+        return Vector3.toFloatArray(points.toArray(new Vector3[0]));
+    }
+    public float[] getNormals() {
+        return Vector3.toFloatArray(normals.toArray(new Vector3[0]));
+    }
+    public float[] getColors() {
+        return Color.toFloatArray(color.toArray(new Color[0]));
+    }
+    public float[] getUV() {
+        return Vector2.toFloatArray(uv.toArray(new Vector2[0]));
+    }
+    public int[] getOrder() {
+        return IVector3.toIntArray(order.toArray(new IVector3[0]));
+    }
+    public short[] getShortOrder() {
+        return IVector3.toShortArray(order.toArray(new IVector3[0]));
+    }
+    public void buildNormals() {
+        normals.clear();
+        for (Vector3 v : points) {
+            normals.add(new Vector3());
+        }
+        for (IVector3 i : order) {
+            Vector3 n = getNormal(points.get(i.x), points.get(i.y), points.get(i.z));
+            normals.get(i.x).add(n);
+            normals.get(i.y).add(n);
+            normals.get(i.z).add(n);
+        }
+        for (Vector3 v : normals) {
+            v.normalize();
+        }
+    }
+    public void stupidColors() {
+        color.clear();
+        for (Vector3 v : points) {
+            color.add(new Color((float)((v.x+1.0)/2.0), (float)((v.y+1.0)/2.0), (float)((v.z+1.0)/2.0)));
+        }
+    }
     public static Vector3[] getNormals(Vector3[] points, int[] order) {
         Vector3[] norms = new Vector3[points.length];
         for (int i=0; i<norms.length; i++) {

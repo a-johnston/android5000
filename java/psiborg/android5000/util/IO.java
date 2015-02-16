@@ -23,17 +23,18 @@ public class IO {
 			while (s != null) {
 				String[] data = s.split(" ");
 				if (data[0].equals("v") == true) {
-					verts.add(new Vector3(Float.parseFloat(data[1]),
-										  Float.parseFloat(data[2]),
-										  Float.parseFloat(data[3])));
+					mesh.points.add(new Vector3(Float.parseFloat(data[1]),
+										        Float.parseFloat(data[2]),
+										        Float.parseFloat(data[3])));
 				} else  if (data[0].equals("c") == true) {
-					cols.add(new Vector3(Float.parseFloat(data[1]),
-										 Float.parseFloat(data[2]),
-										 Float.parseFloat(data[3])));
+					mesh.color.add(new Color(Float.parseFloat(data[1]),
+                            Float.parseFloat(data[2]),
+                            Float.parseFloat(data[3]),1f));
 				} else  if (data[0].equals("f") == true) {
-					point.add(Integer.parseInt(data[1])-1);
-					point.add(Integer.parseInt(data[2])-1);
-					point.add(Integer.parseInt(data[3])-1);
+                    mesh.order.add(new IVector3(
+                            Integer.parseInt(data[1])-1,
+                            Integer.parseInt(data[2])-1,
+                            Integer.parseInt(data[3])-1));
 				}
 				s = in.readLine();
 			}
@@ -42,22 +43,8 @@ public class IO {
 		} catch (IOException e) {
             Log.e("loadObj","Could not open file: "+filename);
         }
-		mesh.order   = new int[point.size()];
-		int i=0;
-		
-		for (Integer f : point) mesh.order[i++] = (short)(int)f;
-		mesh.points  = Vector3.toFloatArray(verts.toArray(new Vector3[verts.size()]));
-		//mesh.color   = Vector3.toFloatArray(cols.toArray(new Vector3[verts.size()]));
-		mesh.normals = Vector3.toFloatArray(MeshData.getNormals(verts.toArray(new Vector3[verts.size()]), mesh.order));
-		
-		mesh.color = new float[mesh.points.length];
-		Random rand = new Random();
-		for (i=0; i<mesh.color.length; i++) {
-			//mesh.color[i] = rand.nextFloat();
-			mesh.color[i] = (mesh.points[i]+1f)/2f;
-			//mesh.color[i] = 1.0f;
-		}
-		
+		mesh.buildNormals();
+		mesh.stupidColors();
 		return mesh;
 	}
 	public static String readFile(String filename) {

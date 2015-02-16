@@ -47,4 +47,20 @@ public class Color {
                          a.b*j + b.b*i,
                          a.a*j + b.a*i);
     }
+    public float[] toFloatArray() {
+        return new float[]{r,g,b,a};
+    }
+    public String toString() {
+        return "color["+r+" , "+g+" , "+b+" , "+a+"]";
+    }
+    public static float[] toFloatArray(Color[] a) {
+        float[] r = new float[a.length*4];
+        for (int i=0; i<a.length; i++) {
+            r[i*4]   = (float)a[i].r;
+            r[i*4+1] = (float)a[i].g;
+            r[i*4+2] = (float)a[i].b;
+            r[i*4+3] = (float)a[i].a;
+        }
+        return r;
+    }
 }

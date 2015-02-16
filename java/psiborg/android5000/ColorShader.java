@@ -29,33 +29,38 @@ public class ColorShader extends Shader {
 	static final byte stride = DIM*4;
 	private int mPositionHandle, mNormalHandle, mColorHandle;
 	public ColorShader(MeshData mesh) {
+        float[] points  = mesh.getPoints();
+        float[] normals = mesh.getNormals();
+        float[] color   = mesh.getColors();
+        int[]   order   = mesh.getOrder();
+
 		sColor = instance(IO.readFile(vertex), IO.readFile(fragment));
 		
 		//add coordinates to buffer
-		ByteBuffer bb = ByteBuffer.allocateDirect(mesh.points.length*4);
+		ByteBuffer bb = ByteBuffer.allocateDirect(points.length*4);
 		bb.order(ByteOrder.nativeOrder());
 		vertexBuffer = bb.asFloatBuffer();
-		vertexBuffer.put(mesh.points);
+		vertexBuffer.put(points);
 		vertexBuffer.position(0);
 		
 		//add normal vectors to buffer
-		ByteBuffer nb = ByteBuffer.allocateDirect(mesh.normals.length*4);
+		ByteBuffer nb = ByteBuffer.allocateDirect(normals.length*4);
 		nb.order(ByteOrder.nativeOrder());
 		normalBuffer = nb.asFloatBuffer();
-		normalBuffer.put(mesh.normals);
+		normalBuffer.put(normals);
 		normalBuffer.position(0);
 		
 		//add color data to buffer
-		ByteBuffer cb = ByteBuffer.allocateDirect(mesh.color.length*4);
+		ByteBuffer cb = ByteBuffer.allocateDirect(color.length*4);
 		cb.order(ByteOrder.nativeOrder());
 		colorBuffer = cb.asFloatBuffer();
-		colorBuffer.put(mesh.color);
+		colorBuffer.put(color);
 		colorBuffer.position(0);
 
-		bb = ByteBuffer.allocateDirect(mesh.order.length*4);
+		bb = ByteBuffer.allocateDirect(order.length*4);
 		bb.order(ByteOrder.nativeOrder());
 		orderBuffer = bb.asIntBuffer();
-		orderBuffer.put(mesh.order);
+		orderBuffer.put(order);
 		orderBuffer.position(0);
 		
 		mPositionHandle = GLES20.glGetAttribLocation(sColor, "v_Position");
