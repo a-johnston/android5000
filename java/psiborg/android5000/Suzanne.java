@@ -2,14 +2,14 @@ package psiborg.android5000;
 
 import psiborg.android5000.base.GameObject;
 import psiborg.android5000.util.IO;
-import psiborg.android5000.util.MeshData;
+import psiborg.android5000.util.Mesh;
 
 public class Suzanne extends GameObject {
     public static float yaw, pitch, radius = 2.5f;
     private ColorShader shader;
     @Override
     public void load() {
-        MeshData obj = IO.loadObj("suzanne.obj");
+        Mesh obj = IO.loadObj("suzanne.obj");
         shader = new ColorShader(obj);
     }
     @Override

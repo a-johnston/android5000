@@ -51,7 +51,7 @@ public class GameEngine implements GLSurfaceView.Renderer {
             scene.step();
             stepTime = ((System.currentTimeMillis()/1000.0)- firstTime) - currentTime;
             if (Camera.active != null) {
-                scene.draw(Camera.active.getMVP());
+                scene.draw();
             }
             drawTime = ((System.currentTimeMillis()/1000.0)- firstTime) - stepTime;
         }

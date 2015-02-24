@@ -6,13 +6,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Random;
 
 import psiborg.android5000.GameEngine;
 
 public class IO {
-	public static MeshData loadObj(String filename) {
-		MeshData mesh = new MeshData();
+	public static Mesh loadObj(String filename) {
+		Mesh mesh = new Mesh();
 		ArrayList<Vector3> verts = new ArrayList<Vector3>();
 		ArrayList<Vector3> cols  = new ArrayList<Vector3>();
 		ArrayList<Integer> point = new ArrayList<Integer>();

@@ -4,17 +4,29 @@ package psiborg.android5000.util;
 public class Vector2 {
 	public double x, y;
 	public Vector2(final double x, final double y) {
-		this.x = x;
-        this.y = y;
+		this.set(x,y);
 	}
     public Vector2(final Vector2 v) {
-        x = v.x;
-        y = v.y;
+        this.set(v);
     }
 	public Vector2(final Vector3 v) {
-		x = v.x;
-        y = v.y;
+		this.set(v);
 	}
+    public Vector2 set(final double x, final double y) {
+        this.x = x;
+        this.y = y;
+        return this;
+    }
+    public Vector2 set(final Vector2 v) {
+        x = v.x;
+        y = v.y;
+        return this;
+    }
+    public Vector2 set(final Vector3 v) {
+        x = v.x;
+        y = v.y;
+        return this;
+    }
     public double dot(final Vector2 v) {
         return this.x*v.x + this.y*v.y;
     }

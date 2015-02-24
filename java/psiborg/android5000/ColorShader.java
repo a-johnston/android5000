@@ -8,7 +8,7 @@ import java.nio.IntBuffer;
 import psiborg.android5000.base.Camera;
 import psiborg.android5000.base.Shader;
 import psiborg.android5000.util.IO;
-import psiborg.android5000.util.MeshData;
+import psiborg.android5000.util.Mesh;
 
 import android.opengl.GLES20;
 
@@ -29,7 +29,7 @@ public class ColorShader extends Shader {
 	static final byte DIM 	 = 3;
 	static final byte stride = DIM*4;
 	private int mPositionHandle, mNormalHandle, mColorHandle;
-	public ColorShader(MeshData mesh) {
+	public ColorShader(Mesh mesh) {
         float[] points  = mesh.getPoints();
         float[] normals = mesh.getNormals();
         float[] color   = mesh.getColors();

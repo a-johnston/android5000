@@ -4,17 +4,24 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
-public class MeshData {
+public class Mesh {
     public ArrayList<Vector3> points, normals;
     public ArrayList<Color> color;
     public ArrayList<Vector2> uv;
     public ArrayList<IVector3> order;
-    public MeshData() {
+    public Mesh() {
         points  = new ArrayList<Vector3>();
         normals = new ArrayList<Vector3>();
         color   = new ArrayList<Color>();
         uv      = new ArrayList<Vector2>();
         order   = new ArrayList<IVector3>();
+    }
+    public void clear() {
+        points.clear();
+        normals.clear();
+        color.clear();
+        uv.clear();
+        order.clear();
     }
     public float[] getPoints() {
         return Vector3.toFloatArray(points.toArray(new Vector3[0]));
