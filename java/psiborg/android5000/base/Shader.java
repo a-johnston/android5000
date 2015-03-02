@@ -2,7 +2,7 @@ package psiborg.android5000.base;
 
 import android.opengl.GLES20;
 
-public abstract class Shader {
+public abstract class Shader extends Asset {
     public abstract void draw();
 	public static int instance(String vertex, String fragment) {
 		int v = GLES20.glCreateShader(GLES20.GL_VERTEX_SHADER);
