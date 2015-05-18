@@ -1,13 +1,11 @@
 package psiborg.android5000;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
 import psiborg.android5000.base.Camera;
 import psiborg.android5000.base.Shader;
-import psiborg.android5000.util.IO;
+import psiborg.android5000.base.StaticFiles;
 import psiborg.android5000.util.Mesh;
 
 import android.opengl.GLES20;
@@ -19,8 +17,8 @@ public class ColorShader extends Shader {
 	
 	private int sColor;
 
-    private static String vertex = "color_vertex";
-    private static String fragment = "color_fragment";
+    private static String vertex   = StaticFiles.load("color_vertex");
+    private static String fragment = StaticFiles.load("color_fragment");
 
 	private FloatBuffer vertexBuffer;
 	private FloatBuffer normalBuffer;
@@ -35,55 +33,35 @@ public class ColorShader extends Shader {
         float[] color   = mesh.getColors();
         int[]   order   = mesh.getOrder();
 
-		sColor = instance(IO.readFile(vertex), IO.readFile(fragment));
-		
-		//add coordinates to buffer
-		ByteBuffer bb = ByteBuffer.allocateDirect(points.length*4);
-		bb.order(ByteOrder.nativeOrder());
-		vertexBuffer = bb.asFloatBuffer();
-		vertexBuffer.put(points);
-		vertexBuffer.position(0);
-		
-		//add normal vectors to buffer
-		ByteBuffer nb = ByteBuffer.allocateDirect(normals.length*4);
-		nb.order(ByteOrder.nativeOrder());
-		normalBuffer = nb.asFloatBuffer();
-		normalBuffer.put(normals);
-		normalBuffer.position(0);
-		
-		//add color data to buffer
-		ByteBuffer cb = ByteBuffer.allocateDirect(color.length*4);
-		cb.order(ByteOrder.nativeOrder());
-		colorBuffer = cb.asFloatBuffer();
-		colorBuffer.put(color);
-		colorBuffer.position(0);
+        vertexBuffer = Shader.bufferFloatArray(points);
+        normalBuffer = Shader.bufferFloatArray(normals);
+        colorBuffer  = Shader.bufferFloatArray(color);
+		orderBuffer  = Shader.bufferIntArray(order);
+	}
+    @Override
+    protected void loadAsset() {
+		sColor = instance(vertex, fragment);
 
-		bb = ByteBuffer.allocateDirect(order.length*4);
-		bb.order(ByteOrder.nativeOrder());
-		orderBuffer = bb.asIntBuffer();
-		orderBuffer.put(order);
-		orderBuffer.position(0);
-		
 		mPositionHandle = GLES20.glGetAttribLocation(sColor, "v_Position");
 		mNormalHandle   = GLES20.glGetAttribLocation(sColor, "v_Normal");
 		mColorHandle    = GLES20.glGetAttribLocation(sColor, "v_Color");
-		
+
 		GLES20.glEnableVertexAttribArray(mPositionHandle);
 		GLES20.glEnableVertexAttribArray(mNormalHandle);
 		GLES20.glEnableVertexAttribArray(mColorHandle);
-		
+
 		//coordinate data
 		GLES20.glVertexAttribPointer(
 				mPositionHandle, DIM,
 				GLES20.GL_FLOAT, false,
 				stride, vertexBuffer);
-		
+
 		//normal data
 		GLES20.glVertexAttribPointer(
 				mNormalHandle, DIM,
 				GLES20.GL_FLOAT, false,
 				stride, normalBuffer);
-		
+
 		//color data
 		GLES20.glVertexAttribPointer(
 				mColorHandle, DIM+1,
@@ -93,7 +71,12 @@ public class ColorShader extends Shader {
 		GLES20.glDisableVertexAttribArray(mPositionHandle);
 		GLES20.glDisableVertexAttribArray(mNormalHandle);
 		GLES20.glDisableVertexAttribArray(mColorHandle);
-	}
+    }
+
+    @Override
+    protected void unloadAsset() {
+
+    }
 	@Override
 	public void draw() {
 		GLES20.glUseProgram(sColor);
@@ -108,7 +91,6 @@ public class ColorShader extends Shader {
         GLES20.glUniform3fv(GLES20.glGetUniformLocation(sColor, "ambient"), 1, ambientCol, 0);
 		GLES20.glUniform1f(GLES20.glGetUniformLocation(sColor, "dirInt"), 1f);
 		GLES20.glUniform1f(GLES20.glGetUniformLocation(sColor, "dirRad"), 4f);
-		
 
 		//transform matrix
 		GLES20.glUniformMatrix4fv(GLES20.glGetUniformLocation(sColor, "uMVPMatrix"),

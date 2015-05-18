@@ -5,7 +5,7 @@ import java.util.LinkedList;
 public class Scene {
     private LinkedList<GameObject> list;
     public Scene() {
-        list = new LinkedList<GameObject>();
+        list = new LinkedList<>();
     }
     public void add(GameObject o) {
         list.add(o);

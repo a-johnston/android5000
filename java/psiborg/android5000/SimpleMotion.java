@@ -1,12 +1,10 @@
 package psiborg.android5000;
 
-import android.util.Log;
 import android.view.MotionEvent;
 
 public class SimpleMotion {
 	private static float px, py;
 	public static void motion(MotionEvent e) {
-        Log.i("pointers", e.getActionIndex()+"!");
 		switch (e.getAction()) {
             case (MotionEvent.ACTION_DOWN):
 				px = e.getX();

@@ -7,10 +7,17 @@ import psiborg.android5000.util.Mesh;
 public class Suzanne extends GameObject {
     public static float yaw, pitch, radius = 2.5f;
     private ColorShader shader;
+    public Suzanne() {
+        Mesh obj = IO.loadObj("suzanne.obj");
+        shader = new ColorShader(obj.stupidColors());
+    }
     @Override
     public void load() {
-        Mesh obj = IO.loadObj("suzanne.obj");
-        shader = new ColorShader(obj);
+        shader.load();
+    }
+    @Override
+    public void unload() {
+        shader.unload();
     }
     @Override
     public void step() {

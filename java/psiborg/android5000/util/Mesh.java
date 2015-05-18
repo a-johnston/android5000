@@ -1,7 +1,5 @@
 package psiborg.android5000.util;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 
 public class Mesh {
@@ -35,15 +33,15 @@ public class Mesh {
     public float[] getUV() {
         return Vector2.toFloatArray(uv.toArray(new Vector2[0]));
     }
-    public int[] getOrder() {
+    public int[]   getOrder() {
         return IVector3.toIntArray(order.toArray(new IVector3[0]));
     }
     public short[] getShortOrder() {
         return IVector3.toShortArray(order.toArray(new IVector3[0]));
     }
-    public void buildNormals() {
+    public Mesh buildNormals() {
         normals.clear();
-        for (Vector3 v : points) {
+        for (Vector3 a: points) {
             normals.add(new Vector3());
         }
         for (IVector3 i : order) {
@@ -55,12 +53,14 @@ public class Mesh {
         for (Vector3 v : normals) {
             v.normalize();
         }
+        return this;
     }
-    public void stupidColors() {
+    public Mesh stupidColors() {
         color.clear();
         for (Vector3 v : points) {
             color.add(new Color(((float)v.x + 1f)/2f, ((float)v.y + 1f)/2f, ((float)v.z + 1f)/2f, .5f));
         }
+        return this;
     }
     public static Vector3[] getNormals(Vector3[] points, int[] order) {
         Vector3[] norms = new Vector3[points.length];
