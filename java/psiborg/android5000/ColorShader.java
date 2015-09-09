@@ -13,7 +13,7 @@ import android.opengl.GLES20;
 public class ColorShader extends Shader {
 	public static float[] lightDir   = new float[]{-1f,1f,1f};
 	public static float[] lightCol   = new float[]{1f,1f,1f};
-	public static float[] ambientCol = new float[]{1f,1f,1f};
+	public static float[] ambientCol = new float[]{.5f,.5f,.5f};
 	
 	private int sColor;
 
@@ -24,19 +24,15 @@ public class ColorShader extends Shader {
 	private FloatBuffer normalBuffer;
 	private FloatBuffer colorBuffer;
 	private IntBuffer orderBuffer;
+
 	static final byte DIM 	 = 3;
 	static final byte stride = DIM*4;
 	private int mPositionHandle, mNormalHandle, mColorHandle;
 	public ColorShader(Mesh mesh) {
-        float[] points  = mesh.getPoints();
-        float[] normals = mesh.getNormals();
-        float[] color   = mesh.getColors();
-        int[]   order   = mesh.getOrder();
-
-        vertexBuffer = Shader.bufferFloatArray(points);
-        normalBuffer = Shader.bufferFloatArray(normals);
-        colorBuffer  = Shader.bufferFloatArray(color);
-		orderBuffer  = Shader.bufferIntArray(order);
+        vertexBuffer = Shader.bufferFloatArray(mesh.getPoints());
+        normalBuffer = Shader.bufferFloatArray(mesh.getNormals());
+        colorBuffer  = Shader.bufferFloatArray(mesh.getColors());
+		orderBuffer  = Shader.bufferIntArray(mesh.getOrder());
 	}
     @Override
     protected void loadAsset() {
@@ -90,11 +86,11 @@ public class ColorShader extends Shader {
 		GLES20.glUniform3fv(GLES20.glGetUniformLocation(sColor, "lightCol"), 1, lightCol, 0);
         GLES20.glUniform3fv(GLES20.glGetUniformLocation(sColor, "ambient"), 1, ambientCol, 0);
 		GLES20.glUniform1f(GLES20.glGetUniformLocation(sColor, "dirInt"), 1f);
-		GLES20.glUniform1f(GLES20.glGetUniformLocation(sColor, "dirRad"), 4f);
+		GLES20.glUniform1f(GLES20.glGetUniformLocation(sColor, "dirRad"), 10f);
 
 		//transform matrix
 		GLES20.glUniformMatrix4fv(GLES20.glGetUniformLocation(sColor, "uMVPMatrix"),
-				1, false, Camera.active.getMVP(), 0);
+				1, false, Camera.getActiveMVP(), 0);
 
 		//draw command
 		GLES20.glDrawElements(

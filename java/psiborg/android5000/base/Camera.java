@@ -6,7 +6,8 @@ import psiborg.android5000.GameEngine;
 import psiborg.android5000.util.Vector3;
 
 public class Camera {
-    public static Camera active;
+    private static Camera active;
+
     private Vector3 from, to, up;
     private float fov, aspect, near, far;
 	private float[] look = new float[16];
@@ -40,6 +41,11 @@ public class Camera {
     public void setMain() {
         active = this;
     }
+    public void unsetMain() {
+        if (this == active) {
+            active = null;
+        }
+    }
 	public void updateLook(float[] from, float[] to, float[] up) {
         this.from.set(from);
         this.to.set(to);
@@ -55,6 +61,12 @@ public class Camera {
         updatePer();
         updateMVP();
 	}
+    public void translate(Vector3 vector) {
+        from.add(vector);
+        to.add(vector);
+        updateLook();
+        updateMVP();
+    }
     public void updateAspectRatio() {
         this.aspect = GameEngine.aspect;
         updatePer();
@@ -70,9 +82,17 @@ public class Camera {
                 (float)up.x,   (float)up.y,   (float)up.z);
     }
     private void updatePer() {
-        Matrix.perspectiveM(per,0,fov,aspect,near,far);
+        Matrix.perspectiveM(per, 0, fov, aspect, near, far);
     }
     private void updateMVP() {
-        Matrix.multiplyMM(mvp, 0, per, 0, look,0);
+        Matrix.multiplyMM(mvp, 0, per, 0, look, 0);
+    }
+
+    public static float[] getActiveMVP() {
+        return active == null ? null : active.getMVP();
+    }
+
+    public static Camera getActive() {
+        return active;
     }
 }

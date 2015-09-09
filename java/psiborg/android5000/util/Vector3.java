@@ -6,9 +6,6 @@ public class Vector3 {
     public static final Vector3 one  = new Vector3(1,1,1);
     public Vector3() { set(0,0,0); }
     public Vector3(Vector3 v) { set(v); }
-    public Vector3(float x, float y, float z) {
-        set(x,y,z);
-    }
     public Vector3(double x, double y, double z) {
         set(x,y,z);
     }

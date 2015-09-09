@@ -15,14 +15,16 @@ public class Android5000 extends GLSurfaceView {
         renderer = new GameEngine(activity);
         setRenderer(renderer);
     }
+
     public void setScene(Scene scene) {
         while (!renderer.setScene(scene)) {
             Log.w("scene", "failed to change scenes. reattempting scene change...");
         }
     }
+
     @Override
     public boolean onTouchEvent(MotionEvent e) {
-    	SimpleMotion.motion(e);
-    	return true;
+        SimpleMotion.motion(e);
+        return true;
     }
 }

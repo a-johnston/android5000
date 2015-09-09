@@ -50,7 +50,7 @@ public class GameEngine implements GLSurfaceView.Renderer {
             time      = currentTime;
             scene.step();
             stepTime = ((System.currentTimeMillis()/1000.0)- firstTime) - currentTime;
-            if (Camera.active != null) {
+            if (Camera.getActive() != null) {
                 scene.draw();
             }
             drawTime = ((System.currentTimeMillis()/1000.0)- firstTime) - stepTime;
@@ -79,8 +79,8 @@ public class GameEngine implements GLSurfaceView.Renderer {
     public void onSurfaceChanged(GL10 unused, int width, int height) {
         GLES20.glViewport(0, 0, width, height);
         aspect = (float) width / height;
-        if (Camera.active != null) {
-            Camera.active.updateAspectRatio();
+        if (Camera.getActive() != null) {
+            Camera.getActive().updateAspectRatio();
         }
     }
 }

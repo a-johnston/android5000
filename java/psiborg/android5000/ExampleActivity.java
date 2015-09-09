@@ -14,10 +14,11 @@ public class ExampleActivity extends Activity {
         gameView = new Android5000(this);
 
         Scene scene = new Scene();
-        scene.add(new TouchCamera());
+        scene.add(new TopDownCamera());
         scene.add(new Suzanne());
         gameView.setScene(scene);
 
+        setContentView(R.layout.activity_main);
         setContentView(gameView);
     }
     

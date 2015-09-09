@@ -8,23 +8,23 @@ public class Suzanne extends GameObject {
     public static float yaw, pitch, radius = 2.5f;
     private ColorShader shader;
     public Suzanne() {
-        Mesh obj = IO.loadObj("suzanne.obj");
-        shader = new ColorShader(obj.stupidColors());
+        Mesh obj = IO.loadObj("terrain.obj");
+        shader = new ColorShader(obj.colorSides(.7f));
     }
     @Override
-    public void load() {
+    protected void loadAsset() {
         shader.load();
     }
     @Override
-    public void unload() {
+    protected void unloadAsset() {
         shader.unload();
     }
     @Override
     public void step() {
-        ColorShader.lightDir = new float[]{ (float)(Math.cos(GameEngine.time)*3), 0, (float)(Math.sin(GameEngine.time)*3) };
+        ColorShader.lightDir = new float[]{ (float)(Math.cos(GameEngine.time)*10), 0, (float)(Math.sin(GameEngine.time)*10) };
     }
     @Override
-    public void draw() {
+    protected void drawAsset() {
         shader.draw();
     }
 }
