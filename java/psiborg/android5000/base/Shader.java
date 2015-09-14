@@ -7,8 +7,7 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-public abstract class Shader extends Loadable {
-    public abstract void draw();
+public class Shader {
 	public static int instance(String vertex, String fragment) {
 		int v = GLES20.glCreateShader(GLES20.GL_VERTEX_SHADER);
 		int f = GLES20.glCreateShader(GLES20.GL_FRAGMENT_SHADER);

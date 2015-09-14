@@ -2,6 +2,11 @@ package psiborg.android5000.util;
 
 
 public class Vector2 {
+    public static final Vector2 ZERO = new Vector2(0, 0);
+    public static final Vector2 ONE  = new Vector2(1, 1);
+    public static final Vector2 UNIT_X = new Vector2(1, 0);
+    public static final Vector2 UNIT_Y = new Vector2(0, 1);
+
 	public double x, y;
 	public Vector2(final double x, final double y) {
 		this.set(x,y);

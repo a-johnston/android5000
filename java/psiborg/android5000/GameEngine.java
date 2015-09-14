@@ -12,20 +12,21 @@ import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 
 public class GameEngine implements GLSurfaceView.Renderer {
-    public static double time, deltatime;
-    public static AssetManager assetman;
-    public static float aspect;
-	private Scene scene, nextScene;
-    private boolean scenelock;
-	private static double firstTime, stepTime, drawTime;
+    private static double time, deltaTime;
+    private static AssetManager assets;
+    private static float aspect;
+    private static double firstTime, stepTime, drawTime;
+    private static GameEngine currentEngine;
+
+    private Scene scene;
+
 	public GameEngine(Context context) {
-        assetman = context.getAssets();
-        scenelock = false;
+        assets = context.getAssets();
     }
 
     @Override
     public void onSurfaceCreated(GL10 unused, EGLConfig config) {
-    	GLES20.glClearColor(0f, 0f, 0f, 1.0f);
+    	GLES20.glClearColor(0.529412f, 0.807843f, 0.921569f, 1.0f);
     	GLES20.glEnable(GLES20.GL_CULL_FACE);
     	GLES20.glEnable(GLES20.GL_DEPTH_TEST);
     	scene = null;
@@ -36,17 +37,9 @@ public class GameEngine implements GLSurfaceView.Renderer {
     public void onDrawFrame(GL10 unused) {
     	GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
     	GLES20.glClear(GLES20.GL_DEPTH_BUFFER_BIT);
-        if (!scenelock && (nextScene != null)) {
-            if (scene != null) {
-                scene.unload();
-            }
-            scene = nextScene;
-            scene.load();
-            nextScene = null;
-        }
     	if (scene != null) {
             double currentTime = (System.currentTimeMillis()/1000.0)- firstTime;
-            deltatime = currentTime-time;
+            deltaTime = currentTime-time;
             time      = currentTime;
             scene.step();
             stepTime = ((System.currentTimeMillis()/1000.0)- firstTime) - currentTime;
@@ -56,24 +49,34 @@ public class GameEngine implements GLSurfaceView.Renderer {
             drawTime = ((System.currentTimeMillis()/1000.0)- firstTime) - stepTime;
         }
     }
-    public boolean setScene(Scene scene) {
-        if (scenelock || (nextScene != null)) {
-            return false;
-        }
-        scenelock = true;
-        nextScene = scene;
-        scenelock = false;
-        return true;
+
+    public void setScene(Scene scene) {
+        this.scene.unload();
+        this.scene = scene;
+        this.scene.load();
     }
+
     public static double getFPS() {
-        return 1.0/deltatime;
+        return 1.0/ deltaTime;
     }
+
     public static double getStepTime() {
         return stepTime;
     }
+
     public static double getDrawTime() {
         return drawTime;
     }
+
+    public static float getAspect() {
+        return aspect;
+    }
+
+    public static AssetManager getAssets() {
+        return assets;
+    }
+
+//    public static boolean queueGL
 
     @Override
     public void onSurfaceChanged(GL10 unused, int width, int height) {

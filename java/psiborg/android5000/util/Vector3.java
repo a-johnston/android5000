@@ -1,9 +1,13 @@
 package psiborg.android5000.util;
 
 public class Vector3 {
-	public double x, y, z;
-    public static final Vector3 zero = new Vector3(0,0,0);
-    public static final Vector3 one  = new Vector3(1,1,1);
+    public static final Vector3 ZERO = new Vector3(0,0,0);
+    public static final Vector3 ONE  = new Vector3(1,1,1);
+    public static final Vector3 UNIT_X  = new Vector3(1,0,0);
+    public static final Vector3 UNIT_Y  = new Vector3(0,1,0);
+    public static final Vector3 UNIT_Z  = new Vector3(0,0,1);
+
+    public double x, y, z;
     public Vector3() { set(0,0,0); }
     public Vector3(Vector3 v) { set(v); }
     public Vector3(double x, double y, double z) {

@@ -16,10 +16,13 @@ public class Android5000 extends GLSurfaceView {
         setRenderer(renderer);
     }
 
-    public void setScene(Scene scene) {
-        while (!renderer.setScene(scene)) {
-            Log.w("scene", "failed to change scenes. reattempting scene change...");
-        }
+    public void setScene(final Scene scene) {
+        queueEvent(new Runnable() {
+            @Override
+            public void run() {
+                renderer.setScene(scene);
+            }
+        });
     }
 
     @Override

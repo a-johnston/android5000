@@ -19,7 +19,7 @@ public class Camera {
         this.to   = new Vector3(to);
         this.up   = new Vector3(up);
         this.fov    = fov;
-        this.aspect = GameEngine.aspect;
+        this.aspect = GameEngine.getAspect();
         this.near   = near;
         this.far    = far;
         updateLook();
@@ -31,7 +31,7 @@ public class Camera {
         this.to   = new Vector3(to);
         this.up   = new Vector3(up);
         this.fov    = fov;
-        this.aspect = GameEngine.aspect;
+        this.aspect = GameEngine.getAspect();
         this.near   = near;
         this.far    = far;
         updateLook();
@@ -55,7 +55,7 @@ public class Camera {
 	}
 	public void updatePerspective(float fov, float near, float far) {
         this.fov    = fov;
-        this.aspect = GameEngine.aspect;
+        this.aspect = GameEngine.getAspect();
         this.near   = near;
         this.far    = far;
         updatePer();
@@ -68,7 +68,7 @@ public class Camera {
         updateMVP();
     }
     public void updateAspectRatio() {
-        this.aspect = GameEngine.aspect;
+        this.aspect = GameEngine.getAspect();
         updatePer();
         updateMVP();
     }

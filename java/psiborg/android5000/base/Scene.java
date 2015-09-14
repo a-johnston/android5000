@@ -3,6 +3,7 @@ package psiborg.android5000.base;
 import java.util.LinkedList;
 
 public class Scene {
+    private boolean loaded;
     private LinkedList<GameObject> list;
     public Scene() {
         list = new LinkedList<>();
@@ -17,14 +18,22 @@ public class Scene {
         return list.contains(o);
     }
     public void load() {
+        if (loaded) {
+            return;
+        }
         for (GameObject o : list) {
             o.load();
         }
+        loaded = true;
     }
     public void unload() {
+        if (!loaded) {
+            return;
+        }
         for (GameObject o : list) {
             o.unload();
         }
+        loaded = false;
     }
     public void step() {
         for (GameObject o : list) {

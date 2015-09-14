@@ -2,29 +2,26 @@ package psiborg.android5000.base;
 
 public abstract class Loadable {
     public String name, tag;
-    private boolean loaded, loading;
-    public boolean isLoaded() {
+
+    private boolean loaded;
+
+    protected void load() {}
+    protected void unload() {}
+
+    public synchronized final boolean isLoaded() {
         return loaded;
     }
-    public boolean isLoading() {
-        return loading && !loaded;
-    }
-    public boolean isUnloaded() {
-        return loaded && !loading;
-    }
-    protected abstract void loadAsset();
-    protected abstract void unloadAsset();
-    public final void load() {
+
+    public synchronized final void loadAsset() {
         if (!loaded) {
-            loading = true;
-            loadAsset();
+            load();
             loaded = true;
         }
     }
-    public final void unload() {
+
+    public synchronized final void unloadAsset() {
         if (loaded) {
-            loading = false;
-            unloadAsset();
+            unload();
             loaded = false;
         }
     }

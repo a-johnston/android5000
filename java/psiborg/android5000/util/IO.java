@@ -53,7 +53,7 @@ public class IO {
     public static String readFile(String filename) {
         String data = "";
         try {
-			BufferedReader in = new BufferedReader(new InputStreamReader(GameEngine.assetman.open(filename)));
+			BufferedReader in = new BufferedReader(new InputStreamReader(GameEngine.getAssets().open(filename)));
             Scanner input = new Scanner(in);
             data = input.useDelimiter("\\A").next();
             input.close();

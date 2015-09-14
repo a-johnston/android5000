@@ -4,16 +4,16 @@ import psiborg.android5000.base.Camera;
 import psiborg.android5000.base.GameObject;
 
 public class RotateCamera extends GameObject implements SimpleMotion.SimpleTouchListener {
-    public static float yaw, pitch, radius = 4f;
+    public static float yaw, pitch, radius = 5f;
     private Camera cam;
 
     @Override
-    public void loadAsset() {
+    public void load() {
         cam = new Camera(
                 new float[]{3.0f,  3.0f,  3.0f},
                 new float[]{0.0f,  0.0f,  0.0f},
                 new float[]{0.0f,  0.0f,  1.0f},
-                70f,1f,10f);
+                70f,1f,100f);
         cam.setMain();
         SimpleMotion.addListener(this);
     }
@@ -29,7 +29,7 @@ public class RotateCamera extends GameObject implements SimpleMotion.SimpleTouch
     }
 
     @Override
-    public void unloadAsset() {
+    public void unload() {
         cam.unsetMain();
         SimpleMotion.removeListener(this);
     }

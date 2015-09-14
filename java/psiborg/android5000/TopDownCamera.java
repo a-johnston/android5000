@@ -8,28 +8,24 @@ public class TopDownCamera extends GameObject implements SimpleMotion.SimpleTouc
     private Camera cam;
 
     @Override
-    protected void loadAsset() {
+    protected void load() {
         cam = new Camera(
-                new float[]{0.0f,  3.0f,  5.0f},
-                new float[]{0.0f,  0.0f,  0.0f},
-                new float[]{0.0f,  1.0f,  0.0f},
-                70f,1f,10f);
+                new float[]{-5f, 8.0f, -5.0f},
+                new float[]{0.0f, 0.0f, 0.0f},
+                new float[]{0.0f, 1.0f, 0.0f},
+                70f, 1f, 100f);
         cam.setMain();
         SimpleMotion.addListener(this);
     }
 
     @Override
-    public void step() {
-    }
-
-    @Override
-    protected void unloadAsset() {
+    protected void unload() {
         cam.unsetMain();
         SimpleMotion.removeListener(this);
     }
 
     @Override
     public void accept(float dx, float dy) {
-        cam.translate(new Vector3(-dx/200f, 0, -dy/200f));
+        cam.translate(new Vector3((dy+dx)/200f, 0, (dy-dx)/200f));
     }
 }
