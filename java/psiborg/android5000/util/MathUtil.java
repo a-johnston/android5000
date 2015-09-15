@@ -1,14 +1,14 @@
 package psiborg.android5000.util;
 
 public class MathUtil {
-    public static Integer max(Integer... ints) {
-        if (ints == null || ints.length == 0) {
+    public static <T extends Comparable> T max(T... values) {
+        if (values == null || values.length == 0) {
             return null;
         }
-        Integer m = ints[0];
-        for (int i = 1; i < ints.length; i++) {
-            if (ints[i].compareTo(m) > 0) {
-                m = ints[i];
+        T m = values[0];
+        for (int i = 1; i < values.length; i++) {
+            if (values[i].compareTo(m) > 0) {
+                m = values[i];
             }
         }
         return m;

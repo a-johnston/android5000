@@ -12,7 +12,7 @@ public class RotateCamera extends GameObject implements SimpleMotion.SimpleTouch
         cam = new Camera(
                 new float[]{3.0f,  3.0f,  3.0f},
                 new float[]{0.0f,  0.0f,  0.0f},
-                new float[]{0.0f,  0.0f,  1.0f},
+                new float[]{0.0f,  1.0f,  0.0f},
                 70f,1f,100f);
         cam.setMain();
         SimpleMotion.addListener(this);
@@ -21,11 +21,10 @@ public class RotateCamera extends GameObject implements SimpleMotion.SimpleTouch
     @Override
     public void step() {
         pitch = (float)(Math.max(Math.min(pitch, Math.PI/2-.001),-Math.PI/2+.001));
-        cam.updateLook(new float[]{(float)(Math.cos(yaw)*Math.cos(pitch)*radius),
-                        (float)(Math.sin(pitch)*radius),
-                        (float)(Math.sin(yaw)*Math.cos(pitch)*radius)},
-                new float[]{0,0,0},
-                new float[]{0,1,0});
+        cam.updateFrom(new float[]{
+                (float)(Math.cos(yaw)*Math.cos(pitch)*radius),
+                (float)(Math.sin(pitch)*radius),
+                (float)(Math.sin(yaw)*Math.cos(pitch)*radius)});
     }
 
     @Override

@@ -48,8 +48,11 @@ public class Color {
                          a.b*j + b.b*i,
                          a.a*j + b.a*i);
     }
-    public float[] toFloatArray() {
+    public float[] toRGBAFloatArray() {
         return new float[]{r,g,b,a};
+    }
+    public float[] toRGBFloatArray() {
+        return new float[]{r,g,b};
     }
     public String toString() {
         return "color["+r+" , "+g+" , "+b+" , "+a+"]";

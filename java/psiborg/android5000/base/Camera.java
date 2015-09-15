@@ -61,6 +61,16 @@ public class Camera {
         updatePer();
         updateMVP();
 	}
+    public void updateFrom(float[] from) {
+        this.from.set(from);
+        updateLook();
+        updateMVP();
+    }
+    public void updateTo(float[] to) {
+        this.to.set(to);
+        updateLook();
+        updateMVP();
+    }
     public void translate(Vector3 vector) {
         from.add(vector);
         to.add(vector);

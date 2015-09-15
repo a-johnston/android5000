@@ -2,9 +2,9 @@ package psiborg.android5000.util;
 
 public class Quaternion {
     public double x, y, z, w;
-    public static final Quaternion identity = new Quaternion();
-    public static final Quaternion one      = new Quaternion(1,1,1,1);
-    public static final Quaternion zero     = new Quaternion(0,0,0,0);
+    public static final Quaternion ID   = new Quaternion();
+    public static final Quaternion ONE  = new Quaternion(1,1,1,1);
+    public static final Quaternion ZERO = new Quaternion(0,0,0,0);
     public Quaternion() {
         set(0,0,0,1);
     }
