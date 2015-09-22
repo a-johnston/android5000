@@ -13,6 +13,11 @@ public class ColorShader extends Shader {
 	private static int sColor = -1;
 
     private static Mesh mesh;
+    private static Vector3 lightPosition = new Vector3(5,5,0);
+    private static Color lightColor = Color.WHITE;
+    private static Color ambientColor = new Color(.2f, .2f, .2f);
+    private static float lightRadius = 10;
+
 
     private static int
             mPositionHandle, mNormalHandle, mColorHandle,
@@ -36,91 +41,66 @@ public class ColorShader extends Shader {
         mAmbientHandle  = GLES20.glGetUniformLocation(sColor, "ambient");
 
         mMVPHandle      = GLES20.glGetUniformLocation(sColor, "uMVPMatrix");
-
-        setLightPosition(Vector3.ZERO);
-        setLightRadius(0f);
-        setLightColor(Color.BLACK);
-        setAmbientColor(Color.BLACK);
-
-
     }
 
     public synchronized static void setMesh(Mesh mesh) {
-        if (sColor == -1 || ColorShader.mesh == mesh) {
-            return;
-        }
-
         ColorShader.mesh = mesh;
-
-        if (mesh == null) {
-            return;
-        }
-
-        GLES20.glUseProgram(sColor);
-
-        GLES20.glEnableVertexAttribArray(mPositionHandle);
-        GLES20.glEnableVertexAttribArray(mNormalHandle);
-        GLES20.glEnableVertexAttribArray(mColorHandle);
-
-        GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, mesh.getPointVBO());
-        GLES20.glVertexAttribPointer(mPositionHandle, Mesh.BYTES_PER_POINT, GLES20.GL_FLOAT, false, 0, 0);
-
-        GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, mesh.getNormalVBO());
-        GLES20.glVertexAttribPointer(mNormalHandle, Mesh.BYTES_PER_NORMAL, GLES20.GL_FLOAT, false, 0, 0);
-
-        GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, mesh.getColorVBO());
-        GLES20.glVertexAttribPointer(mColorHandle, Mesh.BYTES_PER_NORMAL, GLES20.GL_FLOAT, false, 0, 0);
-
-        GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0);
-
-        GLES20.glDisableVertexAttribArray(mPositionHandle);
-        GLES20.glDisableVertexAttribArray(mNormalHandle);
-        GLES20.glDisableVertexAttribArray(mColorHandle);
     }
 
     public synchronized static void setLightPosition(Vector3 position) {
-        GLES20.glUseProgram(sColor);
-        GLES20.glUniform3fv(mLightPosHandle, 1, position.toFloatArray(), 0);
+        lightPosition = position;
     }
 
     public synchronized static void setLightRadius(float radius) {
-        GLES20.glUseProgram(sColor);
-        GLES20.glUniform1f(mLightRadHandle, radius);
+        lightRadius = radius;
     }
 
     public synchronized static void setLightColor(Color color) {
-        GLES20.glUseProgram(sColor);
-        GLES20.glUniform3fv(mLightPosHandle, 1, color.toRGBFloatArray(), 0);
+        lightColor = color;
     }
 
     public synchronized static void setAmbientColor(Color color) {
-        GLES20.glUseProgram(sColor);
-        GLES20.glUniform3fv(mAmbientHandle, 1, color.toRGBFloatArray(), 0);
+        ambientColor = color;
     }
 
 
 
     public synchronized static void draw() {
-        if (sColor == -1 || mesh == null) {
+        if (sColor == -1 || mesh == null || !mesh.hasVBOs()) {
             return;
         }
 
 		GLES20.glUseProgram(sColor);
 
-		GLES20.glEnableVertexAttribArray(mPositionHandle);
-		GLES20.glEnableVertexAttribArray(mNormalHandle);
-		GLES20.glEnableVertexAttribArray(mColorHandle);
+        GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, mesh.getPointVBO());
+        GLES20.glVertexAttribPointer(mPositionHandle, 3, GLES20.GL_FLOAT, false, 0, 0);
+        GLES20.glEnableVertexAttribArray(mPositionHandle);
+
+        GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, mesh.getNormalVBO());
+        GLES20.glVertexAttribPointer(mNormalHandle, 3, GLES20.GL_FLOAT, false, 0, 0);
+        GLES20.glEnableVertexAttribArray(mNormalHandle);
+
+        GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, mesh.getColorVBO());
+        GLES20.glVertexAttribPointer(mColorHandle, 4, GLES20.GL_FLOAT, false, 0, 0);
+        GLES20.glEnableVertexAttribArray(mColorHandle);
 
 		//transform matrix
 		GLES20.glUniformMatrix4fv(mMVPHandle, 1, false, Camera.getActiveMVP(), 0);
 
-        GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, mesh.getOrderVBO());
-        GLES20.glDrawElements(GLES20.GL_TRIANGLES,
-                mesh.getOrderBuffer().capacity(),
-                GLES20.GL_UNSIGNED_INT,
-                mesh.getOrderVBO());
+        //lighting
+        GLES20.glUniform3fv(mLightPosHandle, 1, lightPosition.toFloatArray(), 0);
+        GLES20.glUniform3fv(mLightColHandle, 1, lightColor.toRGBFloatArray(), 0);
+        GLES20.glUniform3fv(mAmbientHandle, 1, ambientColor.toRGBFloatArray(), 0);
+        GLES20.glUniform1f(mLightRadHandle, 100f);
+
+        GLES20.glBindBuffer(GLES20.GL_ELEMENT_ARRAY_BUFFER, mesh.getOrderVBO());
+
+        int indexCount = mesh.getOrderBuffer().capacity();
+
+        GLES20.glDrawElements(GLES20.GL_TRIANGLES, indexCount, GLES20.GL_UNSIGNED_SHORT, 0);
 
         GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0);
+        GLES20.glBindBuffer(GLES20.GL_ELEMENT_ARRAY_BUFFER, 0);
 
 		GLES20.glDisableVertexAttribArray(mPositionHandle);
 		GLES20.glDisableVertexAttribArray(mNormalHandle);

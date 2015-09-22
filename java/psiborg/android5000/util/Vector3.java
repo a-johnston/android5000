@@ -7,85 +7,82 @@ public class Vector3 {
     public static final Vector3 UNIT_Y  = new Vector3(0,1,0);
     public static final Vector3 UNIT_Z  = new Vector3(0,0,1);
 
-    public double x, y, z;
-    public Vector3() { set(0,0,0); }
-    public Vector3(Vector3 v) { set(v); }
+    private double x, y, z;
+
+    public Vector3() {
+        this(0, 0, 0);
+    }
+
+    public Vector3(Vector2 v) {
+        this(v, 0f);
+    }
+
+    public Vector3(Vector2 v, float z) {
+        this(v.getX(), v.getY(), z);
+    }
+
+    public Vector3(Vector3 v) {
+        this(v.x, v.y, v.z);
+    }
+
+    public Vector3(Quaternion q) {
+        this(q.getX(), q.getY(), q.getZ());
+    }
+
     public Vector3(double x, double y, double z) {
-        set(x,y,z);
-    }
-    public Vector3(Quaternion q) { set(q.x, q.y, q.z); }
-    public Vector3(float[] x) {
-        set(x);
-    }
-	public Vector3(Vector2 v) { set(v); }
-	public Vector3(Vector2 v, float z) {
-		set(v);
+        this.x = x;
+        this.y = y;
         this.z = z;
-	}
-    public Vector3 set(double x, double y, double z) {
-        this.x = x; this.y = y; this.z = z;
-        return this;
     }
-    public Vector3 set(double[] x) {
-        this.x = x[0]; this.y = x[1]; this.z = x[2];
-        return this;
+
+    public double getX() {
+        return x;
     }
-    public Vector3 set(float[] x) {
-        this.x = x[0]; this.y = x[1]; this.z = x[2];
-        return this;
+
+    public double getY() {
+        return y;
     }
-    public Vector3 set(int[] x) {
-        this.x = x[0]; this.y = x[1]; this.z = x[2];
-        return this;
+
+    public double getZ() {
+        return z;
     }
-    public Vector3 set(Vector3 v) {
-        this.x = v.x; this.y = v.y; this.z = v.z;
-        return this;
-    }
-    public Vector3 set(Vector2 v) {
-        this.x = v.x; this.y = v.y; this.z = 0;
-        return this;
-    }
+
     public Vector3 mult(final double n) {
-        this.x *= n;
-        this.y *= n;
-        this.z *= n;
-        return this;
+        return new Vector3(x*n, y*n, z*n);
     }
+
     public Vector3 mult(final Vector3 v) {
-        this.x *= v.x;
-        this.y *= v.y;
-        this.z *= v.z;
-        return this;
+        return new Vector3(this.x * v.x, this.y * v.y, this.z * v.z);
     }
-    public Vector3 add(final Vector3 v) {
-        this.x += v.x;
-        this.y += v.y;
-        this.z += v.z;
-        return this;
+
+    public Vector3 plus(final Vector3 v) {
+        return new Vector3(this.x + v.x, this.y + v.y, this.z + v.z);
     }
-    public Vector3 sub(final Vector3 v) {
-        this.x -= v.x;
-        this.y -= v.y;
-        this.z -= v.z;
-        return this;
+
+    public Vector3 minus(final Vector3 v) {
+        return new Vector3(this.x - v.x, this.y - v.y, this.z - v.z);
     }
+
     public double len() {
         return Math.sqrt(this.len2());
     }
+
     public double len2() {
         return x*x+y*y+z*z;
     }
+
     public Vector3 normalize() {
         double l = len();
         if (l != 0) {
-            this.mult(1/l);
+            return mult(1/l);
         }
         return this;
     }
+
     public double dot(final Vector3 v) {
         return this.x*v.x+this.y*v.y+this.z*v.z;
     }
+
     public Vector3 cross(final Vector3 v) {
         Vector3 result = new Vector3(0, 0, 0);
         result.x = (this.y * v.z) - (this.z * v.y);
@@ -93,51 +90,37 @@ public class Vector3 {
         result.z = (this.x * v.y) - (this.y * v.x);
         return result;
     }
-	public static Vector3 cross(Vector3 v1, Vector3 v2) {
-		return v1.cross(v2);
-	}
-	public static double dot(Vector3 v1, Vector3 v2) {
-		return v1.dot(v2);
-	}
-	public static Vector3 mult(Vector3 v, double s) {
-		return new Vector3(v).mult(s);
-	}
-	public static Vector3 mult(Vector3 v1, Vector3 v2) {
-		return new Vector3(v1).mult(v2);
-	}
-    public static Vector3 add(Vector3 v1, Vector3 v2) {
-        return new Vector3(v1).add(v2);
-    }
-	public static Vector3 sub(Vector3 v1, Vector3 v2) {
-		return new Vector3(v1).sub(v2);
-	}
-	public static Vector3 normalize(Vector3 v) {
-		return new Vector3(v).normalize();
-	}
+
     public static Vector3 lerp(final Vector3 a, final Vector3 b, final double i) {
         final double j = 1-i;
         return lincomb(a,b,i,j);
     }
+
     public static Vector3 nlerp(final Vector3 a, final Vector3 b, final double i) {
         return Vector3.lerp(a,b,i).normalize();
     }
+
     public static Vector3 slerp(final Vector3 a, final Vector3 b, final double i) {
         final double d = a.dot(b);
         final double angle = Math.acos(d);
         final double is = 1.0/Math.sin(angle);
         return lincomb(a,b,Math.sin((1-i) * angle)*is,Math.sin((i*angle))*is);
     }
+
     public static Vector3 lincomb(final Vector3 a, final Vector3 b, final double i, final double j) {
         return new Vector3(a.x*j + b.x*i,
                            a.y*j + b.y*i,
                            a.z*j + b.z*i);
     }
+
 	public float[] toFloatArray() {
 		return new float[]{(float)x,(float)y,(float)z};
 	}
+
 	public String toString() {
 		return "vector3["+x+" , "+y+" , "+z+"]";
 	}
+
     public static float[] toFloatArray(Vector3[] a) {
         float[] r = new float[a.length*3];
         for (int i=0; i<a.length; i++) {

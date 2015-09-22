@@ -1,7 +1,8 @@
 package psiborg.android5000.base;
 
 public abstract class Loadable {
-    public String name, tag;
+    public String name = this.getClass().getSimpleName();
+    public String tag = "";
 
     private boolean loaded;
 

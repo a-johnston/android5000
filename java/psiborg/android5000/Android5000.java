@@ -2,7 +2,6 @@ package psiborg.android5000;
 
 import android.app.Activity;
 import android.opengl.GLSurfaceView;
-import android.util.Log;
 import android.view.MotionEvent;
 
 import psiborg.android5000.base.Scene;
@@ -17,7 +16,7 @@ public class Android5000 extends GLSurfaceView {
     }
 
     public void setScene(final Scene scene) {
-        queueEvent(new Runnable() {
+        renderer.doWhenReady(new Runnable() {
             @Override
             public void run() {
                 renderer.setScene(scene);

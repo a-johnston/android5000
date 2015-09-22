@@ -7,47 +7,71 @@ public class Color {
                               GREEN = new Color(0f, 1f, 0f, 1f),
                               BLUE  = new Color(0f, 0f, 1f, 1f),
                               BLANK = new Color(0f, 0f, 0f, 0f);
-    public float r, g, b, a;
+    private float r, g, b, a;
+
     public Color() {
-        this.set(Color.BLACK);
+        this(Color.BLANK);
     }
+
     public Color(final Color c) {
-        this.set(c);
+        this(c.r, c.g, c.b, c.a);
     }
+
     public Color(final float r, final float g, final float b) {
-        this.set(r,g,b);
+        this(r, g, b, 1f);
     }
+
     public Color(final float r, final float g, final float b, final float a) {
-        this.set(r,g,b,a);
-    }
-    public Color set(final Color c) {
-        this.r = c.r;
-        this.g = c.g;
-        this.b = c.b;
-        this.a = c.a;
-        return this;
-    }
-    public Color set(final float r, final float g, final float b) {
-        this.r = r;
-        this.g = g;
-        this.b = b;
-        this.a = 1f;
-        return this;
-    }
-    public Color set(final float r, final float g, final float b, final float a) {
         this.r = r;
         this.g = g;
         this.b = b;
         this.a = a;
-        return this;
     }
-    public static Color lerp(final Color a, final Color b, final float i) {
+
+    public float getRed() {
+        return r;
+    }
+
+    public float getGreen() {
+        return g;
+    }
+
+    public float getBlue() {
+        return b;
+    }
+
+    public float getAlpha() {
+        return a;
+    }
+
+    public Color interpolate(final Color col, final float i) {
         final float j = 1-i;
-        return new Color(a.r*j + b.r*i,
-                         a.g*j + b.g*i,
-                         a.b*j + b.b*i,
-                         a.a*j + b.a*i);
+        return new Color(r*j + col.r*i,
+                         g*j + col.g*i,
+                         b*j + col.b*i,
+                         a*j + col.a*i);
     }
+
+    public Color setRed(float red) {
+        return new Color(red, g, b, a);
+    }
+
+    public Color setGreen(float green) {
+        return new Color(r, green, b, a);
+    }
+
+    public Color setBlue(float blue) {
+        return new Color(r, g, blue, a);
+    }
+
+    public Color setAlpha(float alpha) {
+        return new Color(r, g, b, alpha);
+    }
+
+    public Color intensity(float i) {
+        return new Color(r*i, g*i, b*i, a);
+    }
+
     public float[] toRGBAFloatArray() {
         return new float[]{r,g,b,a};
     }
@@ -57,13 +81,13 @@ public class Color {
     public String toString() {
         return "color["+r+" , "+g+" , "+b+" , "+a+"]";
     }
-    public static float[] toFloatArray(Color[] a) {
+    public static float[] toFloatArray(Color... a) {
         float[] r = new float[a.length*4];
         for (int i=0; i<a.length; i++) {
-            r[i*4]   = (float)a[i].r;
-            r[i*4+1] = (float)a[i].g;
-            r[i*4+2] = (float)a[i].b;
-            r[i*4+3] = (float)a[i].a;
+            r[i*4]   = a[i].r;
+            r[i*4+1] = a[i].g;
+            r[i*4+2] = a[i].b;
+            r[i*4+3] = a[i].a;
         }
         return r;
     }

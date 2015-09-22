@@ -6,6 +6,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.nio.ShortBuffer;
 
 public class Shader {
 	public static int instance(String vertex, String fragment) {
@@ -22,19 +23,22 @@ public class Shader {
 		return p;
 	}
     public static FloatBuffer bufferFloatArray(float[] floats) {
-        ByteBuffer bb = ByteBuffer.allocateDirect(floats.length*4);
-        bb.order(ByteOrder.nativeOrder());
-        FloatBuffer fb = bb.asFloatBuffer();
+        FloatBuffer fb = ByteBuffer.allocateDirect(floats.length * Float.SIZE/Byte.SIZE).order(ByteOrder.nativeOrder()).asFloatBuffer();
         fb.put(floats);
         fb.position(0);
         return fb;
     }
     public static IntBuffer bufferIntArray(int[] ints) {
-        ByteBuffer bb = ByteBuffer.allocateDirect(ints.length*4);
-        bb.order(ByteOrder.nativeOrder());
-        IntBuffer ib = bb.asIntBuffer();
+        IntBuffer ib = ByteBuffer.allocateDirect(ints.length * Integer.SIZE/Byte.SIZE).order(ByteOrder.nativeOrder()).asIntBuffer();
         ib.put(ints);
         ib.position(0);
         return ib;
+    }
+
+    public static ShortBuffer bufferShortArray(short[] shorts) {
+        ShortBuffer buffer = ByteBuffer.allocateDirect(shorts.length * Short.SIZE/Byte.SIZE).order(ByteOrder.nativeOrder()).asShortBuffer();
+        buffer.put(shorts);
+        buffer.position(0);
+        return buffer;
     }
 }

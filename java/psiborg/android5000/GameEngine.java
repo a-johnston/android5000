@@ -10,6 +10,10 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
+import android.util.Log;
+
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class GameEngine implements GLSurfaceView.Renderer {
     private static double time, deltaTime;
@@ -18,10 +22,16 @@ public class GameEngine implements GLSurfaceView.Renderer {
     private static double firstTime, stepTime, drawTime;
     private static GameEngine currentEngine;
 
+    private Queue<Runnable> doWhenReadyList;
     private Scene scene;
 
 	public GameEngine(Context context) {
         assets = context.getAssets();
+        doWhenReadyList = new ConcurrentLinkedQueue<>();
+    }
+
+    public void doWhenReady(Runnable r) {
+        doWhenReadyList.add(r);
     }
 
     @Override
@@ -37,6 +47,9 @@ public class GameEngine implements GLSurfaceView.Renderer {
     public void onDrawFrame(GL10 unused) {
     	GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
     	GLES20.glClear(GLES20.GL_DEPTH_BUFFER_BIT);
+        while (!doWhenReadyList.isEmpty()) {
+            doWhenReadyList.remove().run();
+        }
     	if (scene != null) {
             double currentTime = (System.currentTimeMillis()/1000.0)- firstTime;
             deltaTime = currentTime-time;
@@ -51,9 +64,13 @@ public class GameEngine implements GLSurfaceView.Renderer {
     }
 
     public void setScene(Scene scene) {
-        this.scene.unload();
+        if (this.scene != null) {
+            this.scene.unload();
+        }
         this.scene = scene;
-        this.scene.load();
+        if (this.scene != null) {
+            this.scene.load();
+        }
     }
 
     public static double getFPS() {
@@ -75,8 +92,6 @@ public class GameEngine implements GLSurfaceView.Renderer {
     public static AssetManager getAssets() {
         return assets;
     }
-
-//    public static boolean queueGL
 
     @Override
     public void onSurfaceChanged(GL10 unused, int width, int height) {

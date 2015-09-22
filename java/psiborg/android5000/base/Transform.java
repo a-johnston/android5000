@@ -8,6 +8,6 @@ public class Transform {
     public Quaternion rotation;
     public Transform() {
         position = new Vector3();
-        rotation = new Quaternion();
+        rotation = Quaternion.ID;
     }
 }

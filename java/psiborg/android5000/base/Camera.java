@@ -14,22 +14,10 @@ public class Camera {
 	private float[] per  = new float[16];
 	private float[] mvp  = new float[16];
 
-    public Camera(float[] from, float[] to, float[] up, float fov, float near, float far) {
-        this.from = new Vector3(from);
-        this.to   = new Vector3(to);
-        this.up   = new Vector3(up);
-        this.fov    = fov;
-        this.aspect = GameEngine.getAspect();
-        this.near   = near;
-        this.far    = far;
-        updateLook();
-        updatePer();
-        updateMVP();
-    }
     public Camera(Vector3 from, Vector3 to, Vector3 up, float fov, float near, float far) {
-        this.from = new Vector3(from);
-        this.to   = new Vector3(to);
-        this.up   = new Vector3(up);
+        this.from = from;
+        this.to   = to;
+        this.up   = up;
         this.fov    = fov;
         this.aspect = GameEngine.getAspect();
         this.near   = near;
@@ -38,21 +26,25 @@ public class Camera {
         updatePer();
         updateMVP();
     }
+
     public void setMain() {
         active = this;
     }
+
     public void unsetMain() {
         if (this == active) {
             active = null;
         }
     }
-	public void updateLook(float[] from, float[] to, float[] up) {
-        this.from.set(from);
-        this.to.set(to);
-        this.up.set(up);
+
+	public void updateLook(Vector3 from, Vector3 to, Vector3 up) {
+        this.from = from;
+        this.to = to;
+        this.up = up;
         updateLook();
 		updateMVP();
 	}
+
 	public void updatePerspective(float fov, float near, float far) {
         this.fov    = fov;
         this.aspect = GameEngine.getAspect();
@@ -61,19 +53,19 @@ public class Camera {
         updatePer();
         updateMVP();
 	}
-    public void updateFrom(float[] from) {
-        this.from.set(from);
+    public void updateFrom(Vector3 from) {
+        this.from = from;
         updateLook();
         updateMVP();
     }
-    public void updateTo(float[] to) {
-        this.to.set(to);
+    public void updateTo(Vector3 to) {
+        this.to = to;
         updateLook();
         updateMVP();
     }
     public void translate(Vector3 vector) {
-        from.add(vector);
-        to.add(vector);
+        from = from.plus(vector);
+        to   = to.plus(vector);
         updateLook();
         updateMVP();
     }
@@ -87,9 +79,9 @@ public class Camera {
 	}
     private void updateLook() {
         Matrix.setLookAtM(look,0,
-                (float)from.x, (float)from.y, (float)from.z,
-                (float)to.x,   (float)to.y,   (float)to.z,
-                (float)up.x,   (float)up.y,   (float)up.z);
+                (float)from.getX(), (float)from.getY(), (float)from.getZ(),
+                (float)to.getX(),   (float)to.getY(),   (float)to.getZ(),
+                (float)up.getX(),   (float)up.getY(),   (float)up.getZ());
     }
     private void updatePer() {
         Matrix.perspectiveM(per, 0, fov, aspect, near, far);

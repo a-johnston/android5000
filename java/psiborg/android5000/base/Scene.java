@@ -22,7 +22,7 @@ public class Scene {
             return;
         }
         for (GameObject o : list) {
-            o.load();
+            o.loadAsset();
         }
         loaded = true;
     }
@@ -31,7 +31,7 @@ public class Scene {
             return;
         }
         for (GameObject o : list) {
-            o.unload();
+            o.unloadAsset();
         }
         loaded = false;
     }
@@ -42,7 +42,7 @@ public class Scene {
     }
     public void draw() {
         for (GameObject o : list) {
-            o.draw();
+            o.drawAsset();
         }
     }
 }
