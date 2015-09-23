@@ -37,14 +37,27 @@ public class Mesh {
     private int[] buffers;
 
     private boolean hasVBOs, VBOready;
+    protected boolean meshReady;
+    private WaitOnReadyQueue doWhenReadyQ;
 
     public Mesh() {
-        points  = new ArrayList<>();
-        normals = new ArrayList<>();
-        colors = new ArrayList<>();
-        uv      = new ArrayList<>();
-        order   = new ArrayList<>();
-        buffers = new int[5];
+        points       = new ArrayList<>();
+        normals      = new ArrayList<>();
+        colors       = new ArrayList<>();
+        uv           = new ArrayList<>();
+        order        = new ArrayList<>();
+        buffers      = new int[5];
+        meshReady    = false;
+        doWhenReadyQ = new WaitOnReadyQueue();
+    }
+
+    public synchronized void setReady() {
+        doWhenReadyQ.setReady(true);
+        meshReady = true;
+    }
+
+    public void doWhenReady(Runnable r) {
+        doWhenReadyQ.doWhenReady(r);
     }
 
     public synchronized void pushToGPU() {
@@ -107,6 +120,10 @@ public class Mesh {
         VBOready = true;
     }
 
+    public synchronized boolean meshReady() {
+        return meshReady;
+    }
+
     public synchronized boolean VBOready() {
         return VBOready;
     }
@@ -161,14 +178,18 @@ public class Mesh {
     }
 
     public Mesh pad() {
-        int size = MathUtil.max(points.size(), normals.size(), colors.size(), uv.size());
+        doWhenReady(new Runnable() {
+            @Override
+            public void run() {
+                int size = MathUtil.max(points.size(), normals.size(), colors.size(), uv.size());
 
-        ListUtil.pad(points, size, Vector3.ZERO);
-        ListUtil.pad(normals, size, Vector3.ZERO);
-        ListUtil.pad(colors, size, Color.BLANK);
-        ListUtil.pad(uv, size, Vector2.ZERO);
-        VBOready = false;
-
+                ListUtil.pad(points, size, Vector3.ZERO);
+                ListUtil.pad(normals, size, Vector3.ZERO);
+                ListUtil.pad(colors, size, Color.BLANK);
+                ListUtil.pad(uv, size, Vector2.ZERO);
+                VBOready = false;
+            }
+        });
         return this;
     }
 
@@ -178,7 +199,8 @@ public class Mesh {
         colors.clear();
         uv.clear();
         order.clear();
-        VBOready = false;
+        freeFromGPU();
+        doWhenReadyQ.clear();
     }
 
     public float[] getPoints() {
@@ -226,130 +248,156 @@ public class Mesh {
     }
 
     public Mesh buildNormals() {
-        normals.clear();
-        List<Vector3> newNorms = new ArrayList<>(normals.size());
-        for (Vector3 a: points) {
-            newNorms.add(new Vector3());
-        }
-        for (IVector3 i : order) {
-            Vector3 n = getNormal(points.get(i.getX()), points.get(i.getY()), points.get(i.getZ()));
-            newNorms.set(i.x, newNorms.get(i.x).plus(n));
-            newNorms.set(i.y, newNorms.get(i.y).plus(n));
-            newNorms.set(i.z, newNorms.get(i.z).plus(n));
-        }
-        for (Vector3 v : newNorms) {
-            normals.add(v.normalize());
-        }
-        VBOready = false;
+        doWhenReady(new Runnable() {
+            @Override
+            public void run() {
+                normals.clear();
+                List<Vector3> newNorms = new ArrayList<>(normals.size());
+                for (Vector3 a: points) {
+                    newNorms.add(new Vector3());
+                }
+                for (IVector3 i : order) {
+                    Vector3 n = Vector3.getNormalVector(points.get(i.getX()), points.get(i.getY()), points.get(i.getZ()));
+                    newNorms.set(i.x, newNorms.get(i.x).plus(n));
+                    newNorms.set(i.y, newNorms.get(i.y).plus(n));
+                    newNorms.set(i.z, newNorms.get(i.z).plus(n));
+                }
+                for (Vector3 v : newNorms) {
+                    normals.add(v.normalize());
+                }
+                VBOready = false;
+            }
+        });
         return this;
     }
 
-    public Mesh sharpenEdges(double factor) {
-        for (IVector3 i : order) {
-            Vector3 n = getNormal(points.get(i.x), points.get(i.y), points.get(i.z));
-            if (n.dot(normals.get(i.x)) < factor) {
-                points.add(points.get(i.x));
-                colors.add(colors.get(i.x));
-                normals.add(n);
-                i.x = points.size() - 1;
+    public Mesh sharpenEdges(final double factor) {
+        doWhenReady(new Runnable() {
+            @Override
+            public void run() {
+                for (IVector3 i : order) {
+                    Vector3 n = Vector3.getNormalVector(points.get(i.x), points.get(i.y), points.get(i.z));
+                    if (n.dot(normals.get(i.x)) < factor) {
+                        points.add(points.get(i.x));
+                        colors.add(colors.get(i.x));
+                        normals.add(n);
+                        i.x = points.size() - 1;
+                    }
+                    if (n.dot(normals.get(i.y)) < factor) {
+                        points.add(points.get(i.y));
+                        colors.add(colors.get(i.y));
+                        normals.add(n);
+                        i.y = points.size() - 1;
+                    }
+                    if (n.dot(normals.get(i.z)) < factor) {
+                        points.add(points.get(i.z));
+                        colors.add(colors.get(i.z));
+                        normals.add(n);
+                        i.z = points.size() - 1;
+                    }
+                }
+                VBOready = false;
             }
-            if (n.dot(normals.get(i.y)) < factor) {
-                points.add(points.get(i.y));
-                colors.add(colors.get(i.y));
-                normals.add(n);
-                i.y = points.size() - 1;
-            }
-            if (n.dot(normals.get(i.z)) < factor) {
-                points.add(points.get(i.z));
-                colors.add(colors.get(i.z));
-                normals.add(n);
-                i.z = points.size() - 1;
-            }
-        }
-        VBOready = false;
+        });
         return this;
     }
 
     public Mesh stupidColors() {
-        colors.clear();
-        for (Vector3 v : points) {
-            colors.add(new Color(((float) v.getX() + 1f) / 2f, ((float) v.getY() + 1f) / 2f, ((float) v.getZ() + 1f) / 2f, .5f));
-        }
-        VBOready = false;
-        return this;
-    }
-
-    public Mesh solidColor(Color color) {
-        colors.clear();
-        for (Vector3 v : points) {
-            colors.add(color);
-        }
-        VBOready = false;
-        return this;
-    }
-
-    public Mesh colorSides(double factor) {
-        colors.clear();
-        for (Vector3 p : points) {
-            colors.add(new Color(.5f, .8f, .5f));
-        }
-        for (IVector3 i : order) {
-            Vector3 n = getNormal(points.get(i.x), points.get(i.y), points.get(i.z));
-            if (n.getY() < factor) {
-                points.add(new Vector3(points.get(i.x)));
-                normals.add(n);
-                i.x = points.size()-1;
-                points.add(new Vector3(points.get(i.y)));
-                normals.add(n);
-                i.y = points.size()-1;
-                points.add(new Vector3(points.get(i.z)));
-                normals.add(n);
-                i.z = points.size()-1;
-
-                colors.add(new Color(.5f, .5f, .5f));
-                colors.add(new Color(.5f, .5f, .5f));
-                colors.add(new Color(.5f, .5f, .5f));
-
+        doWhenReady(new Runnable() {
+            @Override
+            public void run() {
+                colors.clear();
+                for (Vector3 v : points) {
+                    colors.add(new Color(((float) v.getX() + 1f) / 2f, ((float) v.getY() + 1f) / 2f, ((float) v.getZ() + 1f) / 2f, .5f));
+                }
+                VBOready = false;
             }
-        }
+        });
+        return this;
+    }
+
+    public Mesh solidColor(final Color color) {
+        doWhenReady(new Runnable() {
+            @Override
+            public void run() {
+                colors.clear();
+                for (Vector3 v : points) {
+                    colors.add(color);
+                }
+                VBOready = false;
+            }
+        });
+        return this;
+    }
+
+    public Mesh colorSides(final double factor) {
+        doWhenReady(new Runnable() {
+            @Override
+            public void run() {
+                colors.clear();
+                for (Vector3 p : points) {
+                    colors.add(new Color(.5f, .8f, .5f));
+                }
+                for (IVector3 i : order) {
+                    Vector3 n = Vector3.getNormalVector(points.get(i.x), points.get(i.y), points.get(i.z));
+                    if (n.getY() < factor) {
+                        points.add(new Vector3(points.get(i.x)));
+                        normals.add(n);
+                        i.x = points.size() - 1;
+                        points.add(new Vector3(points.get(i.y)));
+                        normals.add(n);
+                        i.y = points.size() - 1;
+                        points.add(new Vector3(points.get(i.z)));
+                        normals.add(n);
+                        i.z = points.size() - 1;
+
+                        colors.add(new Color(.5f, .5f, .5f));
+                        colors.add(new Color(.5f, .5f, .5f));
+                        colors.add(new Color(.5f, .5f, .5f));
+
+                    }
+                }
+            }
+        });
         VBOready = false;
         return this;
     }
 
     public Mesh clean() {
-        boolean[] used = new boolean[points.size()];
-        for (IVector3 v : order) {
-            used[v.x] = true;
-            used[v.y] = true;
-            used[v.z] = true;
-        }
-        int n = 0;
-        int[] map = new int[points.size()];
-        Mesh mesh = new Mesh();
-        for (int i = 0; i < points.size(); i++) {
-            if (used[i]) {
-                mesh.addPoint(points.get(i));
-                mesh.addNormal(normals.get(i));
-                mesh.addColor(colors.get(i));
-                mesh.addUV(uv.get(i));
-                map[i] = n;
+        doWhenReady(new Runnable() {
+            @Override
+            public void run() {
+                boolean[] used = new boolean[points.size()];
+                for (IVector3 v : order) {
+                    used[v.x] = true;
+                    used[v.y] = true;
+                    used[v.z] = true;
+                }
+                int n = 0;
+                int[] map = new int[points.size()];
+                Mesh mesh = new Mesh();
+                for (int i = 0; i < points.size(); i++) {
+                    if (used[i]) {
+                        mesh.addPoint(points.get(i));
+                        mesh.addNormal(normals.get(i));
+                        mesh.addColor(colors.get(i));
+                        mesh.addUV(uv.get(i));
+                        map[i] = n;
+                    }
+                }
+                for (IVector3 v : order) {
+                    mesh.addTriangle(new IVector3(map[v.x], map[v.y], map[v.z]));
+                }
+
+                Mesh.this.order = mesh.order;
+                Mesh.this.points = mesh.points;
+                Mesh.this.normals = mesh.normals;
+                Mesh.this.colors = mesh.colors;
+                Mesh.this.uv = mesh.uv;
+
+                VBOready = false;
             }
-        }
-        for (IVector3 v : order) {
-            mesh.addTriangle(new IVector3(map[v.x], map[v.y], map[v.z]));
-        }
-
-        this.order = mesh.order;
-        this.points = mesh.points;
-        this.normals = mesh.normals;
-        this.colors = mesh.colors;
-        this.uv = mesh.uv;
-
-        VBOready = false;
+        });
         return this;
-    }
-
-    public static Vector3 getNormal(Vector3 p1, Vector3 p2, Vector3 p3) {
-        return p2.minus(p1).cross(p3.minus(p1)).normalize();
     }
 }

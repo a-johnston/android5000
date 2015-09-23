@@ -9,7 +9,7 @@ public abstract class Loadable {
     protected void load() {}
     protected void unload() {}
 
-    public synchronized final boolean isLoaded() {
+    public synchronized boolean isLoaded() {
         return loaded;
     }
 

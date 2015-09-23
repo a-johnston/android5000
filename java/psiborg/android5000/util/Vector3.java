@@ -104,13 +104,17 @@ public class Vector3 {
         final double d = a.dot(b);
         final double angle = Math.acos(d);
         final double is = 1.0/Math.sin(angle);
-        return lincomb(a,b,Math.sin((1-i) * angle)*is,Math.sin((i*angle))*is);
+        return lincomb(a, b, Math.sin((1 - i) * angle) * is, Math.sin((i * angle)) * is);
     }
 
     public static Vector3 lincomb(final Vector3 a, final Vector3 b, final double i, final double j) {
         return new Vector3(a.x*j + b.x*i,
                            a.y*j + b.y*i,
                            a.z*j + b.z*i);
+    }
+
+    public static Vector3 getNormalVector(Vector3 p1, Vector3 p2, Vector3 p3) {
+        return p2.minus(p1).cross(p3.minus(p1)).normalize();
     }
 
 	public float[] toFloatArray() {

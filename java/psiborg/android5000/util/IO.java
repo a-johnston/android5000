@@ -12,72 +12,56 @@ import java.util.Scanner;
 import psiborg.android5000.GameEngine;
 
 public class IO {
-    public static Mesh loadObj(String filename) {
-        Mesh mesh = new Mesh();
-        Scanner in = new Scanner(readFile(filename));
-        String s;
-        while (in.hasNext() && (s = in.nextLine()) != null) {
-            String[] data = s.split(" ");
-            if (data[0].equals("v")) {
-                mesh.addPoint(new Vector3(
-                        Float.parseFloat(data[1]),
-                        Float.parseFloat(data[2]),
-                        Float.parseFloat(data[3])));
-            } else  if (data[0].equals("c")) {
-                mesh.addColor(new Color(
-                        Float.parseFloat(data[1]),
-                        Float.parseFloat(data[2]),
-                        Float.parseFloat(data[3]),1f));
-            } else  if (data[0].equals("f")) {
-                mesh.addTriangle(new IVector3(
-                        Integer.parseInt(data[1])-1,
-                        Integer.parseInt(data[2])-1,
-                        Integer.parseInt(data[3])-1));
-                if (data.length == 5) {
-                    mesh.addTriangle(new IVector3(
-                            Integer.parseInt(data[1])-1,
-                            Integer.parseInt(data[3])-1,
-                            Integer.parseInt(data[4])-1));
-                }
-            }
-        }
-        in.close();
+    public static Mesh loadObj(final String filename) {
+        final Mesh mesh = new Mesh();
+        buildMesh(mesh, readFile(filename));
         mesh.buildNormals();
         return mesh;
     }
 
-    public static Mesh loadObjAsync(String filename) {
-        Mesh mesh = new Mesh();
-        Scanner in = new Scanner(readFile(filename));
+    public static Mesh loadObjAsync(final String filename) {
+        final Mesh mesh = new Mesh();
+        final Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                buildMesh(mesh, readFile(filename));
+                mesh.buildNormals();
+            }
+        });
+        t.start();
+        mesh.buildNormals();
+        return mesh;
+    }
+
+    private static void buildMesh(Mesh mesh, String data) {
+        Scanner in = new Scanner(data);
         String s;
         while (in.hasNext() && (s = in.nextLine()) != null) {
-            String[] data = s.split(" ");
-            if (data[0].equals("v")) {
+            String[] lineData = s.split(" ");
+            if (lineData[0].equals("v")) {
                 mesh.addPoint(new Vector3(
-                        Float.parseFloat(data[1]),
-                        Float.parseFloat(data[2]),
-                        Float.parseFloat(data[3])));
-            } else  if (data[0].equals("c")) {
+                        Float.parseFloat(lineData[1]),
+                        Float.parseFloat(lineData[2]),
+                        Float.parseFloat(lineData[3])));
+            } else  if (lineData[0].equals("c")) {
                 mesh.addColor(new Color(
-                        Float.parseFloat(data[1]),
-                        Float.parseFloat(data[2]),
-                        Float.parseFloat(data[3]),1f));
-            } else  if (data[0].equals("f")) {
+                        Float.parseFloat(lineData[1]),
+                        Float.parseFloat(lineData[2]),
+                        Float.parseFloat(lineData[3]),1f));
+            } else  if (lineData[0].equals("f")) {
                 mesh.addTriangle(new IVector3(
-                        Integer.parseInt(data[1])-1,
-                        Integer.parseInt(data[2])-1,
-                        Integer.parseInt(data[3])-1));
-                if (data.length == 5) {
+                        Integer.parseInt(lineData[1])-1,
+                        Integer.parseInt(lineData[2])-1,
+                        Integer.parseInt(lineData[3])-1));
+                if (lineData.length == 5) {
                     mesh.addTriangle(new IVector3(
-                            Integer.parseInt(data[1])-1,
-                            Integer.parseInt(data[3])-1,
-                            Integer.parseInt(data[4])-1));
+                            Integer.parseInt(lineData[1])-1,
+                            Integer.parseInt(lineData[3])-1,
+                            Integer.parseInt(lineData[4])-1));
                 }
             }
         }
-        in.close();
-        mesh.buildNormals();
-        return mesh;
+        mesh.setReady();
     }
 
     public static String readFile(String filename) {

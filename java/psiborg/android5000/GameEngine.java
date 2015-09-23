@@ -1,19 +1,16 @@
 package psiborg.android5000;
 
+import android.content.Context;
+import android.content.res.AssetManager;
+import android.opengl.GLES20;
+import android.opengl.GLSurfaceView;
+
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import psiborg.android5000.base.Camera;
 import psiborg.android5000.base.Scene;
-
-import android.content.Context;
-import android.content.res.AssetManager;
-import android.opengl.GLES20;
-import android.opengl.GLSurfaceView;
-import android.util.Log;
-
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import psiborg.android5000.util.WaitOnReadyQueue;
 
 public class GameEngine implements GLSurfaceView.Renderer {
     private static double time, deltaTime;
@@ -22,16 +19,16 @@ public class GameEngine implements GLSurfaceView.Renderer {
     private static double firstTime, stepTime, drawTime;
     private static GameEngine currentEngine;
 
-    private Queue<Runnable> doWhenReadyList;
+    private WaitOnReadyQueue waitOnReady;
     private Scene scene;
 
 	public GameEngine(Context context) {
         assets = context.getAssets();
-        doWhenReadyList = new ConcurrentLinkedQueue<>();
+        waitOnReady = new WaitOnReadyQueue();
     }
 
     public void doWhenReady(Runnable r) {
-        doWhenReadyList.add(r);
+        waitOnReady.doWhenReady(r);
     }
 
     @Override
@@ -41,15 +38,13 @@ public class GameEngine implements GLSurfaceView.Renderer {
     	GLES20.glEnable(GLES20.GL_DEPTH_TEST);
     	scene = null;
         firstTime = System.currentTimeMillis()/1000.0;
+        waitOnReady.setReady(true);
     }
 
     @Override
     public void onDrawFrame(GL10 unused) {
     	GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
     	GLES20.glClear(GLES20.GL_DEPTH_BUFFER_BIT);
-        while (!doWhenReadyList.isEmpty()) {
-            doWhenReadyList.remove().run();
-        }
     	if (scene != null) {
             double currentTime = (System.currentTimeMillis()/1000.0)- firstTime;
             deltaTime = currentTime-time;

@@ -1,7 +1,5 @@
 package psiborg.android5000;
 
-import android.util.Log;
-
 import psiborg.android5000.base.GameObject;
 import psiborg.android5000.util.Color;
 import psiborg.android5000.util.Mesh;
