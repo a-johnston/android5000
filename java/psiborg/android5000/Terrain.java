@@ -1,6 +1,7 @@
 package psiborg.android5000;
 
 import psiborg.android5000.base.GameObject;
+import psiborg.android5000.base.Transform;
 import psiborg.android5000.util.Color;
 import psiborg.android5000.util.Mesh;
 import psiborg.android5000.util.Meshes;
@@ -25,6 +26,7 @@ public class Terrain extends GameObject {
     @Override
     protected void draw() {
         ColorShader.setMesh(mesh);
+        ColorShader.setTransform(Transform.ID);
         ColorShader.draw();
     }
 }

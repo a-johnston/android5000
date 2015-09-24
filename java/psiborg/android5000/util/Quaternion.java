@@ -1,7 +1,7 @@
 package psiborg.android5000.util;
 
 public class Quaternion {
-    public static final Quaternion ID   = new Quaternion();
+    public static final Quaternion ID   = Quaternion.createQuaternion(0, 0, 0, 1);
     public static final Quaternion ONE  = Quaternion.createQuaternion(1, 1, 1, 1);
     public static final Quaternion ZERO = Quaternion.createQuaternion(0, 0, 0, 0);
 
@@ -67,7 +67,7 @@ public class Quaternion {
                 (chy_shp * chr) + (shy_chp * shr),
                 (shy_chp * chr) - (chy_shp * shr),
                 (chy_chp * shr) - (shy_shp * chr),
-                (chy_chp * chr) + (shy_shp * shr));
+                (chy_chp * chr) + (shy_shp * shr)).normalize();
     }
 
     public Quaternion normalize() {
@@ -92,6 +92,9 @@ public class Quaternion {
     }
 
     public Quaternion mult(final Quaternion q) {
+        if (q == Quaternion.ID) {
+            return this;
+        }
         final double nx = this.w * q.x + this.x * q.w + this.y * q.z - this.z * q.y;
         final double ny = this.w * q.y + this.y * q.w + this.z * q.x - this.x * q.z;
         final double nz = this.w * q.z + this.z * q.w + this.x * q.y - this.y * q.x;
@@ -100,6 +103,9 @@ public class Quaternion {
     }
 
     public Quaternion multLeft(final Quaternion q) {
+        if (q == Quaternion.ID) {
+            return this;
+        }
         final double nx = q.w * this.x + q.x * this.w + q.y * this.z - q.z * y;
         final double ny = q.w * this.y + q.y * this.w + q.z * this.x - q.x * z;
         final double nz = q.w * this.z + q.z * this.w + q.x * this.y - q.y * x;
@@ -118,6 +124,7 @@ public class Quaternion {
     public double len2() {
         return x*x+y*y+z*z+w*w;
     }
+    
     public void toMatrix (final float[] m) {
         if (m.length != 16) {
             return;

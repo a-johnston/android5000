@@ -12,7 +12,7 @@ public class Meshes {
         }
         Mesh r = map.get(asset);
         if (r == null) {
-            r = IO.loadObj(asset);
+            r = IO.loadObjAsync(asset);
             map.put(asset, r);
         }
         return r;

@@ -90,4 +90,13 @@ public class Vector2 {
         }
         return r;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Vector2)) {
+            return false;
+        }
+        Vector2 other = (Vector2) o;
+        return x == other.x && y == other.y;
+    }
 }

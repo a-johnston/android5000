@@ -1,4 +1,5 @@
 precision mediump float;
+
 uniform mat4 uMVPMatrix;
 uniform vec3 lightPos;
 

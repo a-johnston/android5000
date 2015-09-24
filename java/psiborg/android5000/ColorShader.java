@@ -2,32 +2,38 @@ package psiborg.android5000;
 
 import psiborg.android5000.base.Camera;
 import psiborg.android5000.base.Shader;
+import psiborg.android5000.base.Transform;
 import psiborg.android5000.util.Color;
 import psiborg.android5000.util.IO;
 import psiborg.android5000.util.Mesh;
+import psiborg.android5000.util.Quaternion;
 import psiborg.android5000.util.Vector3;
 
 import android.opengl.GLES20;
+import android.util.Log;
 
 public class ColorShader extends Shader {
 	private static int sColor = -1;
 
     private static Mesh mesh;
-    private static Vector3 lightPosition = new Vector3(5,5,0);
-    private static Color lightColor = Color.WHITE;
+    private static Vector3 lightPosition = Vector3.ZERO;
+    private static Color lightColor = Color.BLANK;
     private static Color ambientColor = new Color(.2f, .2f, .2f);
+    private static Transform transform;
     private static float lightRadius = 10;
 
 
     private static int
             mPositionHandle, mNormalHandle, mColorHandle,
             mLightPosHandle, mLightRadHandle, mLightColHandle, mAmbientHandle,
-            mMVPHandle;
+            mMVPHandle, mTrHandle, mOffHandle;
 
     public synchronized static void load() {
         if (sColor != -1) {
             return;
         }
+
+        transform = new Transform();
 
 		sColor = instance(IO.readFile("color_vertex"), IO.readFile("color_fragment"));
 
@@ -41,6 +47,8 @@ public class ColorShader extends Shader {
         mAmbientHandle  = GLES20.glGetUniformLocation(sColor, "ambient");
 
         mMVPHandle      = GLES20.glGetUniformLocation(sColor, "uMVPMatrix");
+        mTrHandle       = GLES20.glGetUniformLocation(sColor, "uTrMatrix");
+        mOffHandle      = GLES20.glGetUniformLocation(sColor, "offset");
     }
 
     public synchronized static void setMesh(Mesh mesh) {
@@ -63,10 +71,12 @@ public class ColorShader extends Shader {
         ambientColor = color;
     }
 
-
+    public synchronized static void setTransform(Transform transform) {
+        this.transform = transform
+    }
 
     public synchronized static void draw() {
-        if (sColor == -1 || mesh == null || !mesh.hasVBOs()) {
+        if (sColor == -1 || mesh == null || !mesh.hasVBOs() || !mesh.meshReady()) {
             return;
         }
 
@@ -84,8 +94,8 @@ public class ColorShader extends Shader {
         GLES20.glVertexAttribPointer(mColorHandle, 4, GLES20.GL_FLOAT, false, 0, 0);
         GLES20.glEnableVertexAttribArray(mColorHandle);
 
-		//transform matrix
-		GLES20.glUniformMatrix4fv(mMVPHandle, 1, false, Camera.getActiveMVP(), 0);
+		//transform
+        GLES20.glUniformMatrix4fv(mMVPHandle, 1, false, Camera.getActiveMVP(transform.toMatrix()), 0);
 
         //lighting
         GLES20.glUniform3fv(mLightPosHandle, 1, lightPosition.toFloatArray(), 0);
@@ -94,9 +104,7 @@ public class ColorShader extends Shader {
         GLES20.glUniform1f(mLightRadHandle, 100f);
 
         GLES20.glBindBuffer(GLES20.GL_ELEMENT_ARRAY_BUFFER, mesh.getOrderVBO());
-
         int indexCount = mesh.getOrderBuffer().capacity();
-
         GLES20.glDrawElements(GLES20.GL_TRIANGLES, indexCount, GLES20.GL_UNSIGNED_SHORT, 0);
 
         GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0);
@@ -106,4 +114,11 @@ public class ColorShader extends Shader {
 		GLES20.glDisableVertexAttribArray(mNormalHandle);
 		GLES20.glDisableVertexAttribArray(mColorHandle);
 	}
+
+    public static void complainAboutGLESError(String str) {
+        int error = GLES20.glGetError();
+        if (error != GLES20.GL_NO_ERROR) {
+            Log.e("Fuck GLES", str + " : " + error);
+        }
+    }
 }

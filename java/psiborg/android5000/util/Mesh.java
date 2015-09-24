@@ -8,6 +8,7 @@ import java.nio.ShortBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+import psiborg.android5000.GameEngine;
 import psiborg.android5000.base.Shader;
 
 public class Mesh {
@@ -51,30 +52,39 @@ public class Mesh {
         doWhenReadyQ = new WaitOnReadyQueue();
     }
 
+    public synchronized void doWhenReady(Runnable r) {
+        doWhenReadyQ.doWhenReady(r);
+    }
+
     public synchronized void setReady() {
         doWhenReadyQ.setReady(true);
         meshReady = true;
     }
 
-    public void doWhenReady(Runnable r) {
-        doWhenReadyQ.doWhenReady(r);
-    }
-
     public synchronized void pushToGPU() {
-        if (hasVBOs()) {
-            return;
-        }
-
-        GLES20.glGenBuffers(buffers.length, buffers, 0);
-        for (int i : buffers) {
-            if (i == 0) {
-                Log.w("Mesh", "Failed to generate buffer index! Make sure valid OpenGL context exists");
-                return;
+        final GameEngine engine = GameEngine.getCurrentEngine();
+        doWhenReadyQ.doWhenReady(new Runnable() {
+            @Override
+            public void run() {
+                engine.doWhenReady(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (hasVBOs()) {
+                            return;
+                        }
+                        GLES20.glGenBuffers(buffers.length, buffers, 0);
+                        for (int i : buffers) {
+                            if (i == 0) {
+                                Log.w("Mesh", "Failed to generate buffer index! Make sure valid OpenGL context exists");
+                                return;
+                            }
+                        }
+                        hasVBOs = true;
+                        updateGPU();
+                    }
+                });
             }
-        }
-        hasVBOs = true;
-
-        updateGPU();
+        });
     }
 
     public synchronized void freeFromGPU() {
@@ -87,7 +97,7 @@ public class Mesh {
     }
 
     public synchronized void updateGPU() {
-        if (!hasVBOs() || VBOready()) {
+        if (!hasVBOs() || VBOready() || !meshReady()) {
             return;
         }
 
@@ -152,23 +162,23 @@ public class Mesh {
         return buffers[ORDER_BUFFER];
     }
 
-    public void addPoint(Vector3 v) {
+    public synchronized void addPoint(Vector3 v) {
         mutateMesh(points, v);
     }
 
-    public void addNormal(Vector3 v) {
+    public synchronized void addNormal(Vector3 v) {
         mutateMesh(normals, v);
     }
 
-    public void addColor(Color c) {
+    public synchronized void addColor(Color c) {
         mutateMesh(colors, c);
     }
 
-    public void addUV(Vector2 v) {
+    public synchronized void addUV(Vector2 v) {
         mutateMesh(uv, v);
     }
 
-    public void addTriangle(IVector3 v) {
+    public synchronized void addTriangle(IVector3 v) {
         mutateMesh(order, v);
     }
 
@@ -177,8 +187,8 @@ public class Mesh {
         VBOready = false;
     }
 
-    public Mesh pad() {
-        doWhenReady(new Runnable() {
+    public synchronized Mesh pad() {
+        doWhenReadyQ.doWhenReady(new Runnable() {
             @Override
             public void run() {
                 int size = MathUtil.max(points.size(), normals.size(), colors.size(), uv.size());
@@ -193,7 +203,7 @@ public class Mesh {
         return this;
     }
 
-    public void clear() {
+    public synchronized void clear() {
         points.clear();
         normals.clear();
         colors.clear();
@@ -203,57 +213,57 @@ public class Mesh {
         doWhenReadyQ.clear();
     }
 
-    public float[] getPoints() {
+    private float[] getPoints() {
         return Vector3.toFloatArray(points.toArray(new Vector3[points.size()]));
     }
 
-    public float[] getNormals() {
+    private float[] getNormals() {
         return Vector3.toFloatArray(normals.toArray(new Vector3[normals.size()]));
     }
 
-    public float[] getColors() {
+    private float[] getColors() {
         return Color.toFloatArray(colors.toArray(new Color[colors.size()]));
     }
 
-    public float[] getUV() {
+    private float[] getUV() {
         return Vector2.toFloatArray(uv.toArray(new Vector2[uv.size()]));
     }
 
-    public int[]   getOrder() {
+    private int[]   getOrder() {
         return IVector3.toIntArray(order.toArray(new IVector3[order.size()]));
     }
 
-    public short[] getShortOrder() {
+    private short[] getShortOrder() {
         return IVector3.toShortArray(order.toArray(new IVector3[order.size()]));
     }
 
-    public FloatBuffer getPointBuffer() {
+    public synchronized FloatBuffer getPointBuffer() {
         return Shader.bufferFloatArray(getPoints());
     }
 
-    public FloatBuffer getNormalBuffer() {
+    public synchronized FloatBuffer getNormalBuffer() {
         return Shader.bufferFloatArray(getNormals());
     }
 
-    public FloatBuffer getColorBuffer() {
+    public synchronized FloatBuffer getColorBuffer() {
         return Shader.bufferFloatArray(getColors());
     }
 
-    public FloatBuffer getUvBuffer() {
+    public synchronized FloatBuffer getUvBuffer() {
         return Shader.bufferFloatArray(getUV());
     }
 
-    public ShortBuffer getOrderBuffer() {
+    public synchronized ShortBuffer getOrderBuffer() {
         return Shader.bufferShortArray(getShortOrder());
     }
 
-    public Mesh buildNormals() {
-        doWhenReady(new Runnable() {
+    public synchronized Mesh buildNormals() {
+        doWhenReadyQ.doWhenReady(new Runnable() {
             @Override
             public void run() {
                 normals.clear();
                 List<Vector3> newNorms = new ArrayList<>(normals.size());
-                for (Vector3 a: points) {
+                for (Vector3 a : points) {
                     newNorms.add(new Vector3());
                 }
                 for (IVector3 i : order) {
@@ -271,8 +281,8 @@ public class Mesh {
         return this;
     }
 
-    public Mesh sharpenEdges(final double factor) {
-        doWhenReady(new Runnable() {
+    public synchronized Mesh sharpenEdges(final double factor) {
+        doWhenReadyQ.doWhenReady(new Runnable() {
             @Override
             public void run() {
                 for (IVector3 i : order) {
@@ -302,8 +312,8 @@ public class Mesh {
         return this;
     }
 
-    public Mesh stupidColors() {
-        doWhenReady(new Runnable() {
+    public synchronized Mesh stupidColors() {
+        doWhenReadyQ.doWhenReady(new Runnable() {
             @Override
             public void run() {
                 colors.clear();
@@ -316,8 +326,8 @@ public class Mesh {
         return this;
     }
 
-    public Mesh solidColor(final Color color) {
-        doWhenReady(new Runnable() {
+    public synchronized Mesh solidColor(final Color color) {
+        doWhenReadyQ.doWhenReady(new Runnable() {
             @Override
             public void run() {
                 colors.clear();
@@ -330,8 +340,8 @@ public class Mesh {
         return this;
     }
 
-    public Mesh colorSides(final double factor) {
-        doWhenReady(new Runnable() {
+    public synchronized Mesh colorSides(final double factor) {
+        doWhenReadyQ.doWhenReady(new Runnable() {
             @Override
             public void run() {
                 colors.clear();
@@ -363,8 +373,8 @@ public class Mesh {
         return this;
     }
 
-    public Mesh clean() {
-        doWhenReady(new Runnable() {
+    public synchronized Mesh clean() {
+        doWhenReadyQ.doWhenReady(new Runnable() {
             @Override
             public void run() {
                 boolean[] used = new boolean[points.size()];

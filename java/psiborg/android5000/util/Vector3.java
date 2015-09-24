@@ -134,4 +134,13 @@ public class Vector3 {
         }
         return r;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Vector3)) {
+            return false;
+        }
+        Vector3 other = (Vector3) o;
+        return x == other.x && y == other.y && z == other.z;
+    }
 }

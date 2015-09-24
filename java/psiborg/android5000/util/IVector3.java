@@ -72,4 +72,13 @@ public class IVector3 {
 	public int[] toIntArray() {
 		return new int[]{x,y,z};
 	}
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof IVector3)) {
+            return false;
+        }
+        IVector3 other = (IVector3) o;
+        return x == other.x && y == other.y && z == other.z;
+    }
 }

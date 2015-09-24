@@ -91,4 +91,43 @@ public class Color {
         }
         return r;
     }
+
+    public static Color fromHSV(float hue, float sat, float val) {
+        int i;
+        float f, p, q, t;
+
+        if(sat == 0) {
+            return new Color(val, val, val);
+        }
+
+        hue *= 6;
+        i = (int)Math.floor(hue);
+        f = hue - i;
+        p = val * (1 - sat);
+        q = val * (1 - sat * f);
+        t = val * (1 - sat * (1 - f));
+
+        switch(i) {
+            case 0:
+                return new Color(val, t, p);
+            case 1:
+                return new Color(q, val, p);
+            case 2:
+                return new Color(p, val, t);
+            case 3:
+                return new Color(p, q, val);
+            case 4:
+                return new Color(t, p, val);
+        }
+        return new Color(val, p, q);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Color)) {
+            return false;
+        }
+        Color other = (Color) o;
+        return r == other.r && g == other.g && b == other.b && a == other.a;
+    }
 }
