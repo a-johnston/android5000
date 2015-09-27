@@ -67,7 +67,7 @@ public class Quaternion {
                 (chy_shp * chr) + (shy_chp * shr),
                 (shy_chp * chr) - (chy_shp * shr),
                 (chy_chp * shr) - (shy_shp * chr),
-                (chy_chp * chr) + (shy_shp * shr)).normalize();
+                (chy_chp * chr) + (shy_shp * shr));
     }
 
     public Quaternion normalize() {

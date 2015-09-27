@@ -182,7 +182,53 @@ public class Mesh {
         mutateMesh(order, v);
     }
 
+    public synchronized Mesh buildPoint(Vector3 point, Vector3 norm, Color color, Vector2 uv) {
+        addPoint(point);
+        addNormal(norm);
+        addColor(color);
+        addUV(uv);
+        return this;
+    }
+
+    public synchronized Mesh buildTriangle(Vector3 p1, Vector3 p2, Vector3 p3, Color color) {
+        int count = points.size();
+        Vector3 norm = Vector3.getNormalVector(p1, p2, p3);
+        buildPoint(p1, norm, color, null);
+        buildPoint(p2, norm, color, null);
+        buildPoint(p3, norm, color, null);
+        addTriangle(new IVector3(count, count + 1, count + 2));
+        return this;
+    }
+
+    public synchronized Mesh buildQuad(Vector3 p1, Vector3 p2, Vector3 p3, Vector3 p4, Color color) {
+        buildTriangle(p1, p2, p3, color);
+        buildTriangle(p4, p3, p2, color);
+        return this;
+    }
+
+    public synchronized Mesh buildCube() {
+        Vector3 p0, p1, p2, p3, p4, p5, p6, p7;
+        p0 = new Vector3(-1, -1, -1);
+        p1 = new Vector3( 1, -1, -1);
+        p2 = new Vector3(-1,  1, -1);
+        p3 = new Vector3( 1,  1, -1);
+        p4 = new Vector3(-1, -1,  1);
+        p5 = new Vector3( 1, -1,  1);
+        p6 = new Vector3(-1,  1,  1);
+        p7 = new Vector3( 1,  1,  1);
+        buildQuad(p0, p2, p1, p3, Color.RED);
+        buildQuad(p1, p3, p5, p7, Color.BLUE);
+        buildQuad(p0, p4, p2, p6, Color.GREEN);
+        buildQuad(p0, p1, p4, p5, Color.YELLOW);
+        buildQuad(p2, p6, p3, p7, Color.PURPLE);
+        buildQuad(p4, p5, p6, p7, Color.CYAN);
+        return this;
+    }
+
     private <E> void mutateMesh(List<E> list, E element) {
+        if (element == null) {
+            return;
+        }
         list.add(element);
         VBOready = false;
     }
@@ -408,6 +454,33 @@ public class Mesh {
                 VBOready = false;
             }
         });
+        return this;
+    }
+
+    public synchronized Mesh translate(Vector3 v) {
+        List<Vector3> newPoints = new ArrayList<>();
+        for (Vector3 point : points) {
+            newPoints.add(point.plus(v));
+        }
+        points = newPoints;
+        return this;
+    }
+
+    public synchronized Mesh scale(Double s) {
+        List<Vector3> newPoints = new ArrayList<>();
+        for (Vector3 point : points) {
+            newPoints.add(point.mult(s));
+        }
+        points = newPoints;
+        return this;
+    }
+
+    public synchronized Mesh scale(Vector3 s) {
+        List<Vector3> newPoints = new ArrayList<>();
+        for (Vector3 point : points) {
+            newPoints.add(point.mult(s));
+        }
+        points = newPoints;
         return this;
     }
 }

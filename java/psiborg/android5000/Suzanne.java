@@ -23,7 +23,6 @@ public class Suzanne extends GameObject {
         ColorShader.load();
         ColorShader.setLightPosition(new Vector3(-5, 7, -5));
         ColorShader.setLightColor(Color.WHITE);
-        ColorShader.setLightColor(Color.BLACK.interpolate(Color.WHITE, .8f));
         mesh.pushToGPU();
     }
 

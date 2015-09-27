@@ -10,9 +10,9 @@ public class Camera {
 
     private Vector3 from, to, up;
     private float fov, aspect, near, far;
-	private float[] look = new float[16];
+	private float[] view = new float[16];
 	private float[] per  = new float[16];
-	private float[] mv = new float[16];
+	private float[] vp = new float[16];
 
     public Camera(Vector3 from, Vector3 to, Vector3 up, float fov, float near, float far) {
         this.from = from;
@@ -24,7 +24,7 @@ public class Camera {
         this.far    = far;
         updateLook();
         updatePer();
-        updateMV();
+        updateVP();
     }
 
     public void setMain() {
@@ -42,7 +42,7 @@ public class Camera {
         this.to = to;
         this.up = up;
         updateLook();
-		updateMV();
+		updateVP();
 	}
 
 	public void updatePerspective(float fov, float near, float far) {
@@ -51,41 +51,41 @@ public class Camera {
         this.near   = near;
         this.far    = far;
         updatePer();
-        updateMV();
+        updateVP();
 	}
     public void updateFrom(Vector3 from) {
         this.from = from;
         updateLook();
-        updateMV();
+        updateVP();
     }
     public void updateTo(Vector3 to) {
         this.to = to;
         updateLook();
-        updateMV();
+        updateVP();
     }
     public void translate(Vector3 vector) {
         from = from.plus(vector);
         to   = to.plus(vector);
         updateLook();
-        updateMV();
+        updateVP();
     }
     public void updateAspectRatio() {
         this.aspect = GameEngine.getAspect();
         updatePer();
-        updateMV();
+        updateVP();
     }
 
-	public float[] getMV() {
-        return mv;
+	public float[] getVP() {
+        return vp;
 	}
 
     public float[] getMVP(float[] modelMat) {
-        Matrix.multiplyMM(modelMat, 0, mv, 0, modelMat, 0);
+        Matrix.multiplyMM(modelMat, 0, vp, 0, modelMat, 0);
         return modelMat;
     }
 
     private void updateLook() {
-        Matrix.setLookAtM(look, 0,
+        Matrix.setLookAtM(view, 0,
                 (float) from.getX(), (float) from.getY(), (float) from.getZ(),
                 (float) to.getX(), (float) to.getY(), (float) to.getZ(),
                 (float) up.getX(), (float) up.getY(), (float) up.getZ());
@@ -95,12 +95,12 @@ public class Camera {
         Matrix.perspectiveM(per, 0, fov, aspect, near, far);
     }
 
-    private void updateMV() {
-        Matrix.multiplyMM(mv, 0, per, 0, look, 0);
+    private void updateVP() {
+        Matrix.multiplyMM(vp, 0, per, 0, view, 0);
     }
 
-    public static float[] getActiveMV() {
-        return active == null ? null : active.getMV();
+    public static float[] getActiveVP() {
+        return active == null ? null : active.getVP();
     }
 
     public static float[] getActiveMVP(float[] modelMat) {

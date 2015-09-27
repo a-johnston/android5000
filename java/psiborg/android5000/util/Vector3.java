@@ -47,6 +47,18 @@ public class Vector3 {
         return z;
     }
 
+    public Vector3 addX(double x) {
+        return new Vector3(this.x + x, this.y, this.z);
+    }
+
+    public Vector3 addY(double y) {
+        return new Vector3(this.x, this.y + y, this.z);
+    }
+
+    public Vector3 addZ(double z) {
+        return new Vector3(this.x, this.y, this.z + z);
+    }
+
     public Vector3 mult(final double n) {
         return new Vector3(x*n, y*n, z*n);
     }

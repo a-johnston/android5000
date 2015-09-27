@@ -1,13 +1,16 @@
 package psiborg.android5000.util;
 
 public class Color {
-    public static final Color BLACK = new Color(0f, 0f, 0f, 1f),
-                              WHITE = new Color(1f, 1f, 1f, 1f),
-                              RED   = new Color(1f, 0f, 0f, 1f),
-                              GREEN = new Color(0f, 1f, 0f, 1f),
-                              BLUE  = new Color(0f, 0f, 1f, 1f),
-                              BLANK = new Color(0f, 0f, 0f, 0f);
-    private float r, g, b, a;
+    public static final Color
+            BLACK  = new Color(0f, 0f, 0f, 1f),
+            WHITE  = new Color(1f, 1f, 1f, 1f),
+            RED    = new Color(1f, 0f, 0f, 1f),
+            GREEN  = new Color(0f, 1f, 0f, 1f),
+            BLUE   = new Color(0f, 0f, 1f, 1f),
+            YELLOW = new Color(1f, 1f, 0f, 1f),
+            PURPLE = new Color(1f, 0f, 1f, 1f),
+            CYAN   = new Color(0f, 1f, 1f, 1f),
+            BLANK  = new Color(0f, 0f, 0f, 0f);    private float r, g, b, a;
 
     public Color() {
         this(Color.BLANK);

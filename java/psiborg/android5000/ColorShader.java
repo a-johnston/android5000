@@ -6,7 +6,6 @@ import psiborg.android5000.base.Transform;
 import psiborg.android5000.util.Color;
 import psiborg.android5000.util.IO;
 import psiborg.android5000.util.Mesh;
-import psiborg.android5000.util.Quaternion;
 import psiborg.android5000.util.Vector3;
 
 import android.opengl.GLES20;
@@ -18,7 +17,7 @@ public class ColorShader extends Shader {
     private static Mesh mesh;
     private static Vector3 lightPosition = Vector3.ZERO;
     private static Color lightColor = Color.BLANK;
-    private static Color ambientColor = new Color(.2f, .2f, .2f);
+    private static Color ambientColor = new Color(.8f, .8f, .8f);
     private static Transform transform;
     private static float lightRadius = 10;
 
@@ -47,7 +46,6 @@ public class ColorShader extends Shader {
         mAmbientHandle  = GLES20.glGetUniformLocation(sColor, "ambient");
 
         mMVPHandle      = GLES20.glGetUniformLocation(sColor, "uMVPMatrix");
-        mTrHandle       = GLES20.glGetUniformLocation(sColor, "uTrMatrix");
         mOffHandle      = GLES20.glGetUniformLocation(sColor, "offset");
     }
 
@@ -72,7 +70,7 @@ public class ColorShader extends Shader {
     }
 
     public synchronized static void setTransform(Transform transform) {
-        this.transform = transform
+        ColorShader.transform = transform;
     }
 
     public synchronized static void draw() {
@@ -94,8 +92,11 @@ public class ColorShader extends Shader {
         GLES20.glVertexAttribPointer(mColorHandle, 4, GLES20.GL_FLOAT, false, 0, 0);
         GLES20.glEnableVertexAttribArray(mColorHandle);
 
-		//transform
-        GLES20.glUniformMatrix4fv(mMVPHandle, 1, false, Camera.getActiveMVP(transform.toMatrix()), 0);
+		//transform (shortcuts identity transforms in mediocre fashion)
+        GLES20.glUniformMatrix4fv(mMVPHandle, 1, false,
+                transform == Transform.ID ?
+                        Camera.getActiveVP() :
+                        Camera.getActiveMVP(transform.toMatrix()), 0);
 
         //lighting
         GLES20.glUniform3fv(mLightPosHandle, 1, lightPosition.toFloatArray(), 0);
