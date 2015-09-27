@@ -17,10 +17,10 @@ public class ExampleActivity extends Activity {
 //        scene.add(new TopDownCamera());
         scene.add(new RotateCamera());
 
-        scene.add(new Cube());
-//        for (int i = 0; i < 20; i++) {
-//            scene.add(new Suzanne());
-//        }
+        for (int i = 0; i < 20; i++) {
+            //scene.add(new Suzanne());
+            scene.add(new Cube());
+        }
 
         scene.add(new ColorOrb());
 //        scene.add(new Terrain());

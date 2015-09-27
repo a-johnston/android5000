@@ -4,6 +4,7 @@ import psiborg.android5000.base.GameObject;
 import psiborg.android5000.base.Transform;
 import psiborg.android5000.util.Mesh;
 import psiborg.android5000.util.Quaternion;
+import psiborg.android5000.util.Random;
 
 public class Cube extends GameObject {
     private Mesh mesh;
@@ -16,6 +17,8 @@ public class Cube extends GameObject {
         mesh.pushToGPU();
 
         transform = new Transform();
+        transform.position = Random.unitPoint().mult(10 * Math.random());
+        transform.rotation = Random.rotation();
 
         rot = Quaternion.fromEulerAngles(Math.random()/100, Math.random()/100, Math.random()/100);
     }
