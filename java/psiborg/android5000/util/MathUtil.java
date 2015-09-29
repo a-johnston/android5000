@@ -1,7 +1,8 @@
 package psiborg.android5000.util;
 
 public class MathUtil {
-    public static <T extends Comparable> T max(T... values) {
+    @SafeVarargs
+    public static <T extends Comparable<T>> T max(T... values) {
         if (values == null || values.length == 0) {
             return null;
         }
@@ -12,5 +13,14 @@ public class MathUtil {
             }
         }
         return m;
+    }
+
+    public static double removeEpsilon(double value) {
+        return removeEpsilon(value, 5);
+    }
+
+    public static double removeEpsilon(double value, int places) {
+        double tens = Math.pow(10.0, places);
+        return Math.round(value * tens) / tens;
     }
 }

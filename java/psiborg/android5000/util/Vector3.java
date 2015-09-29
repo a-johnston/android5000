@@ -129,6 +129,10 @@ public class Vector3 {
         return p2.minus(p1).cross(p3.minus(p1)).normalize();
     }
 
+    public static double distance(final Vector3 v1, final Vector3 v2) {
+        return v1.minus(v2).len();
+    }
+
 	public float[] toFloatArray() {
 		return new float[]{(float)x,(float)y,(float)z};
 	}
