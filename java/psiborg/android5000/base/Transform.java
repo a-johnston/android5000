@@ -28,7 +28,10 @@ public class Transform {
         }
         rotation.toMatrix(m);
         if (!position.equals(Vector3.ZERO)) {
-            Matrix.translateM(m, 0, (float)position.getX(), (float)position.getY(), (float)position.getZ());
+            float[] temp = new float[16];
+            Matrix.setIdentityM(temp, 0);
+            Matrix.translateM(temp, 0, (float)position.getX(), (float)position.getY(), (float)position.getZ());
+            Matrix.multiplyMM(m, 0, temp, 0, m, 0);
         }
     }
 }

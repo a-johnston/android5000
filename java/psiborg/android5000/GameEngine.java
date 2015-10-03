@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
+import android.util.Log;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -38,6 +39,7 @@ public final class GameEngine implements GLSurfaceView.Renderer {
 
     @Override
     public void onSurfaceCreated(GL10 unused, EGLConfig config) {
+        Log.i("GameEngine", this + " - Surface created");
     	GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     	GLES20.glEnable(GLES20.GL_CULL_FACE);
     	GLES20.glEnable(GLES20.GL_DEPTH_TEST);
@@ -73,6 +75,20 @@ public final class GameEngine implements GLSurfaceView.Renderer {
         }
     }
 
+    public Scene getScene() {
+        return scene;
+    }
+
+    void unload() {
+        Log.i("GameEngine", this + " - Unloading");
+//        scene.unload();
+    }
+
+    void load() {
+        Log.i("GameEngine", this + " - Loading");
+//        scene.load();
+    }
+
     public static double getFPS() {
         return 1.0/ deltaTime;
     }
@@ -95,6 +111,7 @@ public final class GameEngine implements GLSurfaceView.Renderer {
 
     @Override
     public void onSurfaceChanged(GL10 unused, int width, int height) {
+        Log.i("GameEngine", this + " - Surface changed : " + width + " , " + height);
         GLES20.glViewport(0, 0, width, height);
         aspect = (float) width / height;
         if (Camera.getActive() != null) {

@@ -41,7 +41,7 @@ public class Mesh {
     protected boolean meshReady;
     private WaitOnReadyQueue doWhenReadyQ;
 
-    public Mesh() {
+    Mesh() {
         points       = new ArrayList<>();
         normals      = new ArrayList<>();
         colors       = new ArrayList<>();
@@ -130,6 +130,14 @@ public class Mesh {
         VBOready = true;
     }
 
+    public synchronized void forgetVBOs() {
+        for (int i = 0; i < buffers.length; i++) {
+            buffers[i] = 0;
+        }
+        hasVBOs = false;
+        VBOready = false;
+    }
+
     public synchronized boolean meshReady() {
         return meshReady;
     }
@@ -140,6 +148,10 @@ public class Mesh {
 
     public synchronized boolean hasVBOs() {
         return hasVBOs;
+    }
+
+    public synchronized int getTriCount() {
+        return order.size();
     }
 
     public synchronized int getPointVBO() {
@@ -457,30 +469,49 @@ public class Mesh {
         return this;
     }
 
-    public synchronized Mesh translate(Vector3 v) {
-        List<Vector3> newPoints = new ArrayList<>();
-        for (Vector3 point : points) {
-            newPoints.add(point.plus(v));
-        }
-        points = newPoints;
+    public synchronized Mesh translate(final Vector3 v) {
+        doWhenReady(new Runnable() {
+            @Override
+            public void run() {
+                List<Vector3> newPoints = new ArrayList<>();
+                for (Vector3 point : points) {
+                    newPoints.add(point.plus(v));
+                }
+                points = newPoints;
+            }
+        });
         return this;
     }
 
-    public synchronized Mesh scale(Double s) {
-        List<Vector3> newPoints = new ArrayList<>();
-        for (Vector3 point : points) {
-            newPoints.add(point.mult(s));
-        }
-        points = newPoints;
+    public synchronized Mesh scale(final Double s) {
+        doWhenReady(new Runnable() {
+            @Override
+            public void run() {
+                List<Vector3> newPoints = new ArrayList<>();
+                for (Vector3 point : points) {
+                    newPoints.add(point.mult(s));
+                }
+                points = newPoints;
+            }
+        });
         return this;
     }
 
-    public synchronized Mesh scale(Vector3 s) {
-        List<Vector3> newPoints = new ArrayList<>();
-        for (Vector3 point : points) {
-            newPoints.add(point.mult(s));
-        }
-        points = newPoints;
+    public synchronized Mesh scale(final Vector3 s) {
+        doWhenReady(new Runnable() {
+            @Override
+            public void run() {
+                List<Vector3> newPoints = new ArrayList<>();
+                for (Vector3 point : points) {
+                    newPoints.add(point.mult(s));
+                }
+                points = newPoints;
+            }
+        });
         return this;
+    }
+
+    public void logInstanceData() {
+        Log.i("Mesh data", "Points: " + points.size() + "\nOrder: " + order.size());
     }
 }

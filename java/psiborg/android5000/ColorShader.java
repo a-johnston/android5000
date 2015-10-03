@@ -49,6 +49,10 @@ public class ColorShader extends Shader {
         mOffHandle      = GLES20.glGetUniformLocation(sColor, "offset");
     }
 
+    public static void forgetProgram() {
+        sColor = -1;
+    }
+
     public synchronized static void setMesh(Mesh mesh) {
         ColorShader.mesh = mesh;
     }
@@ -94,7 +98,7 @@ public class ColorShader extends Shader {
 
 		//transform (shortcuts identity transforms in mediocre fashion)
         GLES20.glUniformMatrix4fv(mMVPHandle, 1, false,
-                transform == Transform.ID ?
+                transform == Transform.ID || transform == null ?
                         Camera.getActiveVP() :
                         Camera.getActiveMVP(transform.toMatrix()), 0);
 
@@ -105,8 +109,7 @@ public class ColorShader extends Shader {
         GLES20.glUniform1f(mLightRadHandle, 100f);
 
         GLES20.glBindBuffer(GLES20.GL_ELEMENT_ARRAY_BUFFER, mesh.getOrderVBO());
-        int indexCount = mesh.getOrderBuffer().capacity();
-        GLES20.glDrawElements(GLES20.GL_TRIANGLES, indexCount, GLES20.GL_UNSIGNED_SHORT, 0);
+        GLES20.glDrawElements(GLES20.GL_TRIANGLES, mesh.getTriCount()*3, GLES20.GL_UNSIGNED_SHORT, 0);
 
         GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0);
         GLES20.glBindBuffer(GLES20.GL_ELEMENT_ARRAY_BUFFER, 0);

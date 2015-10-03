@@ -20,6 +20,6 @@ public class ColorOrb extends GameObject {
 
     private void updatePos(double t, double r, double h) {
         pos = new Vector3(Math.cos(t) * r, Math.sin(t * 2) * h, Math.sin(t) * r);
-        //col = Color.fromHSV(((float)Math.cos(t/5.0)+1f)/2f, 1f, 1f);
+        col = Color.fromHSV(((float)Math.cos(t/5.0)+1f)/2f, 1f, 1f);
     }
 }

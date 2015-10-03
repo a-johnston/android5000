@@ -2,7 +2,9 @@ package psiborg.android5000;
 
 import psiborg.android5000.base.GameObject;
 import psiborg.android5000.base.Transform;
+import psiborg.android5000.util.Color;
 import psiborg.android5000.util.Mesh;
+import psiborg.android5000.util.Meshes;
 import psiborg.android5000.util.Quaternion;
 import psiborg.android5000.util.Random;
 
@@ -12,12 +14,11 @@ public class Cube extends GameObject {
     private Quaternion rot;
 
     public Cube() {
-        mesh = new Mesh().buildCube();
+        mesh = Meshes.getNewMesh().buildCube().scale(Random.vector()).solidColor(Color.WHITE);
         mesh.setReady();
-        mesh.pushToGPU();
 
         transform = new Transform();
-        transform.position = Random.unitPoint().mult(10 * Math.random());
+        transform.position = Random.unitPoint().mult(3 + 7 * Math.random());
         transform.rotation = Random.rotation();
 
         rot = Quaternion.fromEulerAngles(Math.random()/100, Math.random()/100, Math.random()/100);
@@ -26,11 +27,13 @@ public class Cube extends GameObject {
     @Override
     protected void load() {
         ColorShader.load();
+        mesh.pushToGPU();
     }
 
     @Override
     public void step() {
         transform.rotation = transform.rotation.mult(rot);
+        transform.position = rot.transform(transform.position);
     }
 
     @Override

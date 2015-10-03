@@ -1,22 +1,32 @@
 package psiborg.android5000.base;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Scene {
     private boolean loaded;
-    private LinkedList<GameObject> list;
+    private List<GameObject> list;
+
     public Scene() {
-        list = new LinkedList<>();
+        list = new ArrayList<>();
     }
+
     public void add(GameObject o) {
         list.add(o);
     }
+
     public void remove(GameObject o) {
         list.remove(o);
     }
+
     public boolean contains(GameObject o) {
         return list.contains(o);
     }
+
+    public List<GameObject> objects() {
+        return list;
+    }
+
     public void load() {
         if (loaded) {
             return;
@@ -26,6 +36,7 @@ public class Scene {
         }
         loaded = true;
     }
+
     public void unload() {
         if (!loaded) {
             return;
@@ -35,11 +46,13 @@ public class Scene {
         }
         loaded = false;
     }
+
     public void step() {
         for (GameObject o : list) {
             o.step();
         }
     }
+
     public void draw() {
         for (GameObject o : list) {
             o.drawAsset();

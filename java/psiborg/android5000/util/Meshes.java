@@ -17,4 +17,22 @@ public class Meshes {
         }
         return r;
     }
+
+    public static Mesh getNewMesh() {
+        if (map == null) {
+            map = new HashMap<>();
+        }
+        Mesh mesh = new Mesh();
+        map.put(mesh.toString(), mesh);
+        return mesh;
+    }
+
+    public static void forgetVBOs() {
+        if (map == null) {
+            return;
+        }
+        for (Mesh m : map.values()) {
+            m.forgetVBOs();
+        }
+    }
 }
