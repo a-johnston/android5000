@@ -2,7 +2,6 @@ package psiborg.android5000;
 
 import psiborg.android5000.base.GameObject;
 import psiborg.android5000.base.Transform;
-import psiborg.android5000.util.Color;
 import psiborg.android5000.util.Mesh;
 import psiborg.android5000.util.Meshes;
 import psiborg.android5000.util.Quaternion;
@@ -10,18 +9,16 @@ import psiborg.android5000.util.Random;
 
 public class Cube extends GameObject {
     private Mesh mesh;
-    private Transform transform;
-    private Quaternion rot;
+    private Quaternion orbit, rot;
 
     public Cube() {
-        mesh = Meshes.getNewMesh().buildCube().scale(Random.vector()).solidColor(Color.WHITE);
+        mesh = Meshes.getNewMesh().buildCube().scale(Random.vector()).solidColor(Random.rgb());
         mesh.setReady();
 
-        transform = new Transform();
-        transform.position = Random.unitPoint().mult(3 + 7 * Math.random());
-        transform.rotation = Random.rotation();
+        transform = new Transform(Random.unitPoint().mult(7 + 20 * Math.random()), Random.rotation());
 
-        rot = Quaternion.fromEulerAngles(Math.random()/100, Math.random()/100, Math.random()/100);
+        orbit = Quaternion.fromEulerAngles(Math.random()/100, Math.random()/100, Math.random()/100);
+        rot   = Quaternion.fromEulerAngles(Math.random()/50, Math.random()/50, Math.random()/50);
     }
 
     @Override
@@ -32,8 +29,7 @@ public class Cube extends GameObject {
 
     @Override
     public void step() {
-        transform.rotation = transform.rotation.mult(rot);
-        transform.position = rot.transform(transform.position);
+        transform = new Transform(orbit.transform(transform.position), transform.rotation.mult(rot).normalize());
     }
 
     @Override

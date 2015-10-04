@@ -8,12 +8,27 @@ import psiborg.android5000.util.Vector3;
 public class Transform {
     public static final Transform ID = new Transform();
 
-    public Vector3 position;
-    public Quaternion rotation;
+    public final Vector3 position;
+    public final Quaternion rotation;
 
     public Transform() {
-        position = new Vector3();
-        rotation = Quaternion.ID;
+        this.position = new Vector3();
+        this.rotation = Quaternion.ID;
+    }
+
+    public Transform(Vector3 position) {
+        this.position = position;
+        this.rotation = Quaternion.ID;
+    }
+
+    public Transform(Quaternion rotation) {
+        this.position = new Vector3();
+        this.rotation = rotation;
+    }
+
+    public Transform(Vector3 position, Quaternion rotation) {
+        this.position = position;
+        this.rotation = rotation;
     }
 
     public float[] toMatrix() {
@@ -30,7 +45,7 @@ public class Transform {
         if (!position.equals(Vector3.ZERO)) {
             float[] temp = new float[16];
             Matrix.setIdentityM(temp, 0);
-            Matrix.translateM(temp, 0, (float)position.getX(), (float)position.getY(), (float)position.getZ());
+            Matrix.translateM(temp, 0, (float) position.x, (float) position.y, (float) position.z);
             Matrix.multiplyMM(m, 0, temp, 0, m, 0);
         }
     }

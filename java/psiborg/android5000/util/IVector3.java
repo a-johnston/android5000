@@ -1,7 +1,7 @@
 package psiborg.android5000.util;
 
 public class IVector3 {
-    int x, y, z;
+    public int x, y, z;
 
     public IVector3() {
         this(0, 0, 0);
@@ -16,18 +16,6 @@ public class IVector3 {
         this.y = y;
         this.z = z;
 	}
-
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public int getZ() {
-        return z;
-    }
 
     public IVector3 mult(int n) {
         return new IVector3(x*n, y*n, z*n);

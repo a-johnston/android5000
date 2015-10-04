@@ -22,7 +22,7 @@ public class Camera {
         this.aspect = GameEngine.getAspect();
         this.near   = near;
         this.far    = far;
-        updateLook();
+        updateView();
         updatePer();
         updateVP();
     }
@@ -37,11 +37,18 @@ public class Camera {
         }
     }
 
-	public void updateLook(Vector3 from, Vector3 to, Vector3 up) {
+    public void updateView(Transform transform) {
+        updateView(
+                transform.position,
+                transform.position.plus(transform.rotation.transform(Vector3.UNIT_X)),
+                transform.position.plus(transform.rotation.transform(Vector3.UNIT_Z)));
+    }
+
+	public void updateView(Vector3 from, Vector3 to, Vector3 up) {
         this.from = from;
         this.to = to;
         this.up = up;
-        updateLook();
+        updateView();
 		updateVP();
 	}
 
@@ -55,18 +62,18 @@ public class Camera {
 	}
     public void updateFrom(Vector3 from) {
         this.from = from;
-        updateLook();
+        updateView();
         updateVP();
     }
     public void updateTo(Vector3 to) {
         this.to = to;
-        updateLook();
+        updateView();
         updateVP();
     }
     public void translate(Vector3 vector) {
         from = from.plus(vector);
         to   = to.plus(vector);
-        updateLook();
+        updateView();
         updateVP();
     }
     public void updateAspectRatio() {
@@ -84,11 +91,11 @@ public class Camera {
         return modelMat;
     }
 
-    private void updateLook() {
+    private void updateView() {
         Matrix.setLookAtM(view, 0,
-                (float) from.getX(), (float) from.getY(), (float) from.getZ(),
-                (float) to.getX(), (float) to.getY(), (float) to.getZ(),
-                (float) up.getX(), (float) up.getY(), (float) up.getZ());
+                (float) from.x, (float) from.y, (float) from.z,
+                (float) to.x, (float) to.y, (float) to.z,
+                (float) up.x, (float) up.y, (float) up.z);
     }
 
     private void updatePer() {

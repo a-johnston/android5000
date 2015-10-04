@@ -19,6 +19,15 @@ public class Scene {
         list.remove(o);
     }
 
+    public <T extends GameObject> T get(Class<T> klazz) {
+        for (GameObject obj : list) {
+            if (klazz.isInstance(obj)) {
+                return (T)obj;
+            }
+        }
+        return null;
+    }
+
     public boolean contains(GameObject o) {
         return list.contains(o);
     }

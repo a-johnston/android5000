@@ -8,10 +8,15 @@ import psiborg.android5000.util.Meshes;
 import psiborg.android5000.util.Vector3;
 
 public class Suzanne extends GameObject {
-    private Mesh mesh;
+    private final Mesh mesh;
 
     public Suzanne() {
-        mesh = Meshes.getMesh("suzanne.obj").scale(3.0).solidColor(Color.WHITE).pad();
+        mesh = Meshes.getMesh("suzanne.obj").doWhenLoaded(new Runnable() {
+            @Override
+            public void run() {
+                mesh.scale(3.0).solidColor(Color.WHITE).pad();
+            }
+        });
     }
 
     @Override

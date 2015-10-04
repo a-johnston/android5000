@@ -7,27 +7,23 @@ public class Vector2 {
     public static final Vector2 UNIT_X = new Vector2(1, 0);
     public static final Vector2 UNIT_Y = new Vector2(0, 1);
 
-	private double x, y;
+	public final double x, y;
 
 	public Vector2(final double x, final double y) {
 		this.x = x;
         this.y = y;
 	}
 
-    public Vector2(final Vector2 v) {
-        this(v.x, v.y);
-    }
-
 	public Vector2(final Vector3 v) {
-        this(v.getX(), v.getY());
+        this(v.x, v.y);
 	}
 
-    public double getX() {
-        return x;
+    public Vector2 addX(double x) {
+        return new Vector2(this.x + x, this.y);
     }
 
-    public double getY() {
-        return y;
+    public Vector2 addY(double y) {
+        return new Vector2(this.x, this.y + y);
     }
 
     public double dot(final Vector2 v) {

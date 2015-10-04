@@ -32,7 +32,7 @@ public class WaitOnReadyQueue {
         }
     }
 
-    public boolean getReady() {
+    public boolean isReady() {
         return ready;
     }
 

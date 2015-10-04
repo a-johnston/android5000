@@ -315,6 +315,13 @@ public class Mesh {
         return Shader.bufferShortArray(getShortOrder());
     }
 
+    public synchronized Mesh doWhenLoaded(Runnable runnable) {
+        if (!doWhenReadyQ.isReady()) {
+            doWhenReady(runnable);
+        }
+        return this;
+    }
+
     public synchronized Mesh buildNormals() {
         doWhenReadyQ.doWhenReady(new Runnable() {
             @Override
@@ -325,7 +332,7 @@ public class Mesh {
                     newNorms.add(new Vector3());
                 }
                 for (IVector3 i : order) {
-                    Vector3 n = Vector3.getNormalVector(points.get(i.getX()), points.get(i.getY()), points.get(i.getZ()));
+                    Vector3 n = Vector3.getNormalVector(points.get(i.x), points.get(i.y), points.get(i.z));
                     newNorms.set(i.x, newNorms.get(i.x).plus(n));
                     newNorms.set(i.y, newNorms.get(i.y).plus(n));
                     newNorms.set(i.z, newNorms.get(i.z).plus(n));
@@ -376,7 +383,7 @@ public class Mesh {
             public void run() {
                 colors.clear();
                 for (Vector3 v : points) {
-                    colors.add(new Color(((float) v.getX() + 1f) / 2f, ((float) v.getY() + 1f) / 2f, ((float) v.getZ() + 1f) / 2f, .5f));
+                    colors.add(new Color(((float) v.x + 1f) / 2f, ((float) v.y + 1f) / 2f, ((float) v.z + 1f) / 2f, .5f));
                 }
                 VBOready = false;
             }
@@ -408,14 +415,14 @@ public class Mesh {
                 }
                 for (IVector3 i : order) {
                     Vector3 n = Vector3.getNormalVector(points.get(i.x), points.get(i.y), points.get(i.z));
-                    if (n.getY() < factor) {
-                        points.add(new Vector3(points.get(i.x)));
+                    if (n.y < factor) {
+                        points.add(points.get(i.x));
                         normals.add(n);
                         i.x = points.size() - 1;
-                        points.add(new Vector3(points.get(i.y)));
+                        points.add(points.get(i.y));
                         normals.add(n);
                         i.y = points.size() - 1;
-                        points.add(new Vector3(points.get(i.z)));
+                        points.add(points.get(i.z));
                         normals.add(n);
                         i.z = points.size() - 1;
 
