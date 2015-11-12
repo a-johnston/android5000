@@ -237,6 +237,28 @@ public class Mesh {
         return this;
     }
 
+    public synchronized Mesh buildPlane(int n) {
+        if (n < 2) {
+            return this;
+        }
+        int startSize = points.size();
+        double off = (n-1) / 2.0;
+        Vector3 norm = Vector3.UNIT_Y;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                points.add(new Vector3(i - off, 0, j - off));
+                normals.add(norm)
+            }
+        }
+        for (int i = 0; i < n*n - n - 1; i++) { //might pull this out, doesn't matter atm
+            if (i+1 % n > 0) { //not on the edge
+                order.add()
+            }
+        }
+
+        return this;
+    }
+
     private <E> void mutateMesh(List<E> list, E element) {
         if (element == null) {
             return;

@@ -21,15 +21,14 @@ public class IO {
 
     public static Mesh loadObjAsync(final String filename) {
         final Mesh mesh = new Mesh();
-        final Thread t = new Thread(new Runnable() {
+        final Runnable loader = new Runnable() {
             @Override
             public void run() {
                 buildMesh(mesh, readFile(filename));
                 mesh.buildNormals();
             }
-        });
-        t.start();
-        mesh.buildNormals();
+        };
+        new Thread(loader).start();
         return mesh;
     }
 

@@ -21,11 +21,10 @@ public class ColorShader extends Shader {
     private static Transform transform;
     private static float lightRadius = 10;
 
-
     private static int
             mPositionHandle, mNormalHandle, mColorHandle,
             mLightPosHandle, mLightRadHandle, mLightColHandle, mAmbientHandle,
-            mMVPHandle, mTrHandle, mOffHandle;
+            mMVPHandle;
 
     public synchronized static void load() {
         if (sColor != -1) {
@@ -46,7 +45,6 @@ public class ColorShader extends Shader {
         mAmbientHandle  = GLES20.glGetUniformLocation(sColor, "ambient");
 
         mMVPHandle      = GLES20.glGetUniformLocation(sColor, "uMVPMatrix");
-        mOffHandle      = GLES20.glGetUniformLocation(sColor, "offset");
     }
 
     public static void forgetProgram() {
@@ -106,7 +104,7 @@ public class ColorShader extends Shader {
         GLES20.glUniform3fv(mLightPosHandle, 1, lightPosition.toFloatArray(), 0);
         GLES20.glUniform3fv(mLightColHandle, 1, lightColor.toRGBFloatArray(), 0);
         GLES20.glUniform3fv(mAmbientHandle, 1, ambientColor.toRGBFloatArray(), 0);
-        GLES20.glUniform1f(mLightRadHandle, 100f);
+        GLES20.glUniform1f(mLightRadHandle, lightRadius);
 
         GLES20.glBindBuffer(GLES20.GL_ELEMENT_ARRAY_BUFFER, mesh.getOrderVBO());
         GLES20.glDrawElements(GLES20.GL_TRIANGLES, mesh.getTriCount()*3, GLES20.GL_UNSIGNED_SHORT, 0);

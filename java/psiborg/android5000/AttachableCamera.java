@@ -13,7 +13,7 @@ public class AttachableCamera extends GameObject {
                 new Vector3(-10.0, 0.0, 0.0),
                 new Vector3(  0.0, 0.0, 0.0),
                 new Vector3(  0.0, 1.0, 0.0),
-                70f, .01f, 100f);
+                70f, .1f, 100f);
         cam.setMain();
     }
 
