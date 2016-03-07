@@ -165,6 +165,6 @@ public class Quaternion {
 
     @Override
     public String toString() {
-        return "quaternion["+x+" , "+y+" , "+z+" , "+w+"]";
+        return "quaternion< " + x + ", " + y + ", " + z + ", " + w + " >";
     }
 }

@@ -87,7 +87,7 @@ public class Vector2 {
 
     @Override
     public String toString() {
-        return "vector2["+x+" , "+y+"]";
+        return "vector2< " + x + ", " + y + " >";
     }
 
     @Override

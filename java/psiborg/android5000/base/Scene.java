@@ -18,11 +18,12 @@ public class Scene {
     public void remove(GameObject o) {
         list.remove(o);
     }
-
-    public <T extends GameObject> T get(Class<T> klazz) {
+ 
+    @SuppressWarnings("unchecked")
+    public <T extends GameObject> T get(Class<T> returnClass) {
         for (GameObject obj : list) {
-            if (klazz.isInstance(obj)) {
-                return (T)obj;
+            if (returnClass.isInstance(obj)) {
+                return (T) obj;
             }
         }
         return null;

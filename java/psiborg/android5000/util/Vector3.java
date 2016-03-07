@@ -133,7 +133,7 @@ public class Vector3 {
 
     @Override
     public String toString() {
-        return "vector3["+x+" , "+y+" , "+z+"]";
+        return "vector3< " + x + ", " + y + ", " + z + " >";
     }
 
     @Override
