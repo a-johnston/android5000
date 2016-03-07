@@ -1,15 +1,12 @@
 package psiborg.android5000;
 
 import android.opengl.GLES20;
-import android.util.Log;
 
 import psiborg.android5000.base.Camera;
 import psiborg.android5000.base.Shader;
 import psiborg.android5000.base.Transform;
-import psiborg.android5000.util.Color;
 import psiborg.android5000.util.IO;
 import psiborg.android5000.util.Mesh;
-import psiborg.android5000.util.Vector3;
 
 public class SimpleShader extends Shader {
 	private static int sColor = -1;
@@ -70,11 +67,4 @@ public class SimpleShader extends Shader {
 
 		GLES20.glDisableVertexAttribArray(mPositionHandle);
 	}
-
-    public static void complainAboutGLESError(String str) {
-        int error = GLES20.glGetError();
-        if (error != GLES20.GL_NO_ERROR) {
-            Log.e("Fuck GLES", str + " : " + error);
-        }
-    }
 }

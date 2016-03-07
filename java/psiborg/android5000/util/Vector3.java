@@ -121,10 +121,6 @@ public class Vector3 {
 		return new float[]{(float)x,(float)y,(float)z};
 	}
 
-	public String toString() {
-		return "vector3["+x+" , "+y+" , "+z+"]";
-	}
-
     public static float[] toFloatArray(Vector3[] a) {
         float[] r = new float[a.length*3];
         for (int i=0; i<a.length; i++) {
@@ -133,6 +129,11 @@ public class Vector3 {
             r[i*3+2] = (float)a[i].z;
         }
         return r;
+    }
+
+    @Override
+    public String toString() {
+        return "vector3["+x+" , "+y+" , "+z+"]";
     }
 
     @Override

@@ -24,16 +24,16 @@ public class Quaternion {
         return new Quaternion(axis.x * sina, axis.y * sina, axis.z * sina, Math.cos(half));
     }
 
-    public static Quaternion fromEulerAngles(final double yaw, final double pitch, final double roll) {
-        final double hy  = yaw * 0.5f;
-        final double hp  = pitch * 0.5f;
-        final double hr  = roll * 0.5f;
-        final double shy = Math.sin(hy);
-        final double chy = Math.cos(hy);
-        final double shp = Math.sin(hp);
-        final double chp = Math.cos(hp);
-        final double shr = Math.sin(hr);
-        final double chr = Math.cos(hr);
+    public static Quaternion fromEulerAngles(double yaw, double pitch, double roll) {
+        yaw   *= Math.toRadians(yaw)   / 2.0;
+        pitch *= Math.toRadians(pitch) / 2.0;
+        roll  *= Math.toRadians(roll)  / 2.0;
+        final double shy = Math.sin(yaw);
+        final double chy = Math.cos(yaw);
+        final double shp = Math.sin(pitch);
+        final double chp = Math.cos(pitch);
+        final double shr = Math.sin(roll);
+        final double chr = Math.cos(roll);
         final double chy_shp = chy * shp;
         final double shy_chp = shy * chp;
         final double chy_chp = chy * chp;
@@ -75,17 +75,6 @@ public class Quaternion {
             this.w * q.y + this.y * q.w + this.z * q.x - this.x * q.z,
             this.w * q.z + this.z * q.w + this.x * q.y - this.y * q.x,
             this.w * q.w - this.x * q.x - this.y * q.y - this.z * q.z);
-    }
-
-    public Quaternion multLeft(final Quaternion q) {
-        if (q == Quaternion.ID) {
-            return this;
-        }
-        return new Quaternion(
-            q.w * this.x + q.x * this.w + q.y * this.z - q.z * y,
-            q.w * this.y + q.y * this.w + q.z * this.x - q.x * z,
-            q.w * this.z + q.z * this.w + q.x * this.y - q.y * x,
-            q.w * this.w - q.x * this.x - q.y * this.y - q.z * z);
     }
 
     public double dot(final Quaternion q) {
@@ -174,6 +163,7 @@ public class Quaternion {
              && (this.w == q.w));
     }
 
+    @Override
     public String toString() {
         return "quaternion["+x+" , "+y+" , "+z+" , "+w+"]";
     }

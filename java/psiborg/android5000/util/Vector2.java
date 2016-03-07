@@ -75,9 +75,7 @@ public class Vector2 {
 	public float[] toFloatArray() {
 		return new float[]{(float)x, (float)y};
 	}
-    public String toString() {
-        return "vector2["+x+" , "+y+"]";
-    }
+
     public static float[] toFloatArray(Vector2[] a) {
         float[] r = new float[a.length*2];
         for (int i=0; i<a.length; i++) {
@@ -85,6 +83,11 @@ public class Vector2 {
             r[i*2+1] = (float)a[i].y;
         }
         return r;
+    }
+
+    @Override
+    public String toString() {
+        return "vector2["+x+" , "+y+"]";
     }
 
     @Override
