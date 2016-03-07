@@ -1,6 +1,7 @@
 package psiborg.android5000.base;
 
 import android.opengl.Matrix;
+import android.util.Log;
 
 import psiborg.android5000.GameEngine;
 import psiborg.android5000.util.Vector3;
@@ -104,6 +105,19 @@ public class Camera {
 
     private void updateVP() {
         Matrix.multiplyMM(vp, 0, per, 0, view, 0);
+
+        Log.i("vp", "View");
+        printMatrix(view);
+        Log.i("vp", "Per");
+        printMatrix(per);
+        Log.i("vp", "VP");
+        printMatrix(vp);
+    }
+
+    private void printMatrix(float[] mat) {
+        for (int i = 0; i < 16; i += 4) {
+            Log.i("matrix", "[ " + mat[i] + " " + mat[i+1] + " " + mat[i+2] + " " + mat[i+3] + " ]");
+        }
     }
 
     public static float[] getActiveVP() {

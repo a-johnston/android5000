@@ -237,7 +237,17 @@ public class Mesh {
         return this;
     }
 
-    public synchronized Mesh buildPlane(int n) {
+    public synchronized Mesh buildPlane() {
+        buildQuad(
+                new Vector3(-1, -1, 0),
+                new Vector3(1, -1, 0),
+                new Vector3(-1, 1, 0),
+                new Vector3(1, 1, 0),
+                Color.WHITE);
+        return this;
+    }
+
+    public synchronized Mesh buildSegmentedPlane(int n) {
         if (n < 2) {
             return this;
         }
@@ -247,12 +257,12 @@ public class Mesh {
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
                 points.add(new Vector3(i - off, 0, j - off));
-                normals.add(norm)
+                normals.add(norm);
             }
         }
         for (int i = 0; i < n*n - n - 1; i++) { //might pull this out, doesn't matter atm
             if (i+1 % n > 0) { //not on the edge
-                order.add()
+//                order.add();
             }
         }
 

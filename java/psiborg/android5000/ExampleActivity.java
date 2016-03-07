@@ -15,14 +15,8 @@ public class ExampleActivity extends Activity {
 
         Scene scene = new Scene();
 
-        scene.add(new AttachableCamera());
-        for (int i = 0; i < 200; i++) {
-            scene.add(new Cube());
-        }
-        scene.add(new Suzanne());
-        scene.add(new ColorOrb());
-
-        scene.get(AttachableCamera.class).attach(scene.get(Cube.class));
+        scene.add(new Cube());
+        scene.add(new BasicCamera());
 
         gameView.setScene(scene);
         setContentView(R.layout.activity_main);

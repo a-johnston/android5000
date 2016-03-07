@@ -5,8 +5,11 @@ import android.util.Pair;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents a 3D path and allows for constant speed linear movement along that path.
+ */
 public class Path {
-    private List<Pair<Vector3, Double>> points;
+    private final List<Pair<Vector3, Double>> points;
 
     public Path() {
         points = new ArrayList<>();

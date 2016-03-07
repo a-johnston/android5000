@@ -1,5 +1,9 @@
 package psiborg.android5000.util;
 
+/**
+ * Provides convenient methods for generating various data types within the package.
+ * TODO this really shouldn't be in the repo. If anything, there should be a demo package with this
+ */
 public class Random {
     public static Vector3 vector() {
         return new Vector3(Math.random(), Math.random(), Math.random());
