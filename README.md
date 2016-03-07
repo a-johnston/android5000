@@ -11,7 +11,6 @@ I consider the functionality implemented in android5000 the minimal to develop y
  - quaternions
  - meshes
  - custom shaders
- - touchscreen events
  
 This library is very much a work in progress and has so far been used (by myself) for prototyping shaders and for visualizing algorithms than manipulate 3D data.
 
