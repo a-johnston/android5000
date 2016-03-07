@@ -17,7 +17,7 @@ public class Cube extends GameObject {
         mesh = Meshes.getNewMesh().buildCube().stupidColors();
         mesh.setReady();
 
-        rot = Quaternion.fromEulerAngles(0, 0, .02f);
+        rot = Quaternion.fromEulerAngles(0, 0, 1f);
         Log.i("R", rot.x + " " + rot.y + " " + rot.z + " " + rot.w);
     }
 

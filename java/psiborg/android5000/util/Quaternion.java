@@ -18,16 +18,17 @@ public class Quaternion {
         return new Quaternion(v.x, v.y, v.z, 0.0);
     }
 
-    public static Quaternion fromAxisAngle(final Vector3 axis, final double angle) {
-        final double half = angle/2f;
-        final double sina = Math.sin(half);
-        return new Quaternion(axis.x * sina, axis.y * sina, axis.z * sina, Math.cos(half));
+    public static Quaternion fromAxisAngle(final Vector3 axis, double angle) {
+        angle = Math.toRadians(angle) / 2.0;
+        final double sin = Math.sin(angle);
+        return new Quaternion(axis.x * sin, axis.y * sin, axis.z * sin, Math.cos(angle));
     }
 
     public static Quaternion fromEulerAngles(double yaw, double pitch, double roll) {
-        yaw   *= Math.toRadians(yaw)   / 2.0;
-        pitch *= Math.toRadians(pitch) / 2.0;
-        roll  *= Math.toRadians(roll)  / 2.0;
+        yaw   = Math.toRadians(yaw)   / 2.0;
+        pitch = Math.toRadians(pitch) / 2.0;
+        roll  = Math.toRadians(roll)  / 2.0;
+
         final double shy = Math.sin(yaw);
         final double chy = Math.cos(yaw);
         final double shp = Math.sin(pitch);

@@ -114,7 +114,7 @@ public class Camera {
         printMatrix(vp);
     }
 
-    private void printMatrix(float[] mat) {
+    public static void printMatrix(float[] mat) {
         for (int i = 0; i < 16; i += 4) {
             Log.i("matrix", "[ " + mat[i] + " " + mat[i+1] + " " + mat[i+2] + " " + mat[i+3] + " ]");
         }
