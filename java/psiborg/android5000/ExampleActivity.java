@@ -2,7 +2,6 @@ package psiborg.android5000;
 
 import android.os.Bundle;
 import android.app.Activity;
-import android.util.Log;
 
 import psiborg.android5000.base.Scene;
 
@@ -22,10 +21,6 @@ public class ExampleActivity extends Activity {
         gameView.setScene(scene);
         setContentView(R.layout.activity_main);
         setContentView(gameView);
-
-        Log.i("test", "asd");
-        Log.i("test", "asd");
-        Log.i("test", "asd");
     }
     
     @Override
